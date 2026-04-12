@@ -5,6 +5,7 @@ import com.vibrantminds.vibrantminds.admin.dto.AdminRequestDto;
 import com.vibrantminds.vibrantminds.admin.dto.AdminResponseDto;
 import com.vibrantminds.vibrantminds.exception.ResourceNotFoundException;
 import com.vibrantminds.vibrantminds.exception.UnauthorizedException;
+import com.vibrantminds.vibrantminds.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ public class AdminServiceImpl implements AdminService{
 
     private final AdminRepository adminRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
 
     @Override
@@ -42,15 +44,15 @@ public class AdminServiceImpl implements AdminService{
     public String loginAdmin(AdminLoginDto dto) {
 
         AdminEntity admin = adminRepository.findByEmail(dto.getEmail())
-                .orElseThrow(() -> new UnauthorizedException("Invalid email or password"));
+                .orElseThrow(() -> new UnauthorizedException(
+                        "Invalid email or password"));
 
         if (!passwordEncoder.matches(dto.getPassword(), admin.getPassword())) {
             throw new UnauthorizedException("Invalid email or password");
         }
 
-        // We will return JWT token here in Step 4
-        // return jwtUtil.generateToken(admin.getEmail(), admin.getRole());
-        return "Login successful - JWT will be added in Step 4";
+        // Now returns real JWT token
+        return jwtUtil.generateToken(admin.getEmail(), admin.getRole());
     }
 
     @Override
