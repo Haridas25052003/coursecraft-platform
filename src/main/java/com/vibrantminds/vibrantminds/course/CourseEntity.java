@@ -1,4 +1,4 @@
-package com.vibrantminds.vibrantminds.candidate;
+package com.vibrantminds.vibrantminds.course;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,44 +7,42 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "candidate")
+@Table(name = "course")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CandidateEntity {
+public class CourseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String name;
+    private String title;              // Java Full Stack, Software Testing
 
-    @Column(nullable = false, unique = true)
-    private String email;
-
-    @Column(nullable = false)
-    private String password;
+    @Column(nullable = false, length = 2000)
+    private String description;
 
     @Column(nullable = false)
-    private String mobile;
-
-    private String qualification;      // B.E, B.Tech, MCA etc
-
-    private String skills;             // Java, Python etc
-
-    private String experience;         // Fresher, 1-2 years
-
-    private String currentCity;        // Pune, Mumbai etc
-
-    private String resumeLink;         // Google Drive link or path
-
-    private String linkedinProfile;
-
-    private String githubProfile;
+    private String duration;           // 3 Months, 6 Months
 
     @Column(nullable = false)
-    private String role = "ROLE_CANDIDATE";
+    private String mode;               // Online, Offline, Hybrid
+
+    @Column(nullable = false)
+    private String fees;               // 15000, Free etc
+
+    @Column(nullable = false)
+    private String syllabus;           // Topics covered
+
+    @Column(nullable = false)
+    private String eligibility;        // Any Graduate, B.E/B.Tech
+
+    private String certificate;        // Yes / No
+
+    private String jobAssistance;      // Yes / No
+
+    private String thumbnail;          // image path or URL
 
     private boolean active = true;
 
