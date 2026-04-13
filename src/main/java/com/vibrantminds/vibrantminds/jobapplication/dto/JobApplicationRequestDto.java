@@ -1,0 +1,15 @@
+package com.vibrantminds.vibrantminds.jobapplication.dto;
+
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+
+@Data
+public class JobApplicationRequestDto {
+
+    @NotNull(message = "Job ID is required")
+    private Long jobId;
+
+    private String coverLetter;
+
+    private String resumePath;
+}
