@@ -70,7 +70,8 @@ public class SecurityConfig {
                         "/api/courses/**",
                         "/api/testimonials",
                         "/api/contact",
-                        "/api/colleges/**"
+                        "/api/colleges/**",
+                        "/api/companies/**"
                 ).permitAll()
 
                 //  Admin only APIs
