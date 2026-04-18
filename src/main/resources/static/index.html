@@ -1,10 +1,1178 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>VibrantMinds Technologies – Launch Your IT Career</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet"/>
+    <style>
+        :root {
+          --primary: #1a1a2e;
+          --accent: #e94560;
+          --accent2: #0f3460;
+          --gold: #f5a623;
+          --light: #f8f9ff;
+          --white: #ffffff;
+          --gray: #6b7280;
+          --border: #e5e7eb;
+          --gradient: linear-gradient(135deg, #1a1a2e 0%, #0f3460 50%, #16213e 100%);
+          --card-shadow: 0 4px 24px rgba(0,0,0,0.08);
+          --hover-shadow: 0 12px 40px rgba(233,69,96,0.15);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'DM Sans', sans-serif; color: var(--primary); background: var(--white); overflow-x: hidden; }
+
+        /* ── NAVBAR ── */
+        nav {
+          position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+          background: rgba(26,26,46,0.95);
+          backdrop-filter: blur(12px);
+          border-bottom: 1px solid rgba(255,255,255,0.08);
+          padding: 0 5%;
+          height: 70px;
+          display: flex; align-items: center; justify-content: space-between;
+          transition: all 0.3s;
+        }
+        .nav-logo {
+          font-family: 'Syne', sans-serif;
+          font-weight: 800; font-size: 1.5rem;
+          color: var(--white);
+          text-decoration: none;
+          letter-spacing: -0.5px;
+        }
+        .nav-logo span { color: var(--accent); }
+        .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
+        .nav-links a {
+          color: rgba(255,255,255,0.75);
+          text-decoration: none;
+          font-size: 0.9rem;
+          font-weight: 400;
+          transition: color 0.2s;
+          letter-spacing: 0.2px;
+        }
+        .nav-links a:hover { color: var(--white); }
+        .nav-cta {
+          background: var(--accent);
+          color: var(--white) !important;
+          padding: 0.5rem 1.25rem;
+          border-radius: 50px;
+          font-weight: 500 !important;
+          transition: background 0.2s, transform 0.2s !important;
+        }
+        .nav-cta:hover { background: #c73652 !important; transform: translateY(-1px); }
+        .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+        .hamburger span { width: 24px; height: 2px; background: white; border-radius: 2px; transition: 0.3s; }
+
+        /* ── HERO ── */
+        .hero {
+          min-height: 100vh;
+          background: var(--gradient);
+          display: flex; align-items: center;
+          padding: 100px 5% 60px;
+          position: relative;
+          overflow: hidden;
+        }
+        .hero::before {
+          content: '';
+          position: absolute; inset: 0;
+          background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        .hero-blob {
+          position: absolute;
+          border-radius: 50%;
+          filter: blur(80px);
+          opacity: 0.15;
+        }
+        .blob1 { width: 500px; height: 500px; background: var(--accent); top: -100px; right: -100px; }
+        .blob2 { width: 350px; height: 350px; background: var(--gold); bottom: -50px; left: 10%; }
+        .hero-content { position: relative; z-index: 1; max-width: 700px; }
+        .hero-badge {
+          display: inline-flex; align-items: center; gap: 8px;
+          background: rgba(233,69,96,0.15);
+          border: 1px solid rgba(233,69,96,0.3);
+          color: #ff8fa3;
+          padding: 6px 16px;
+          border-radius: 50px;
+          font-size: 0.82rem;
+          font-weight: 500;
+          margin-bottom: 1.5rem;
+          letter-spacing: 0.5px;
+          animation: fadeInDown 0.6s ease;
+        }
+        .badge-dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.3)} }
+        .hero h2 {
+          font-family: 'Syne', sans-serif;
+          font-size: clamp(2.5rem, 6vw, 4.5rem);
+          font-weight: 750;
+          color: var(--white);
+          line-height: 1.1;
+          letter-spacing: -1.5px;
+          margin-bottom: 1.5rem;
+          animation: fadeInUp 0.7s ease 0.1s both;
+        }
+        .hero h2 em { color: var(--accent); font-style: normal; }
+        .hero p {
+          color: rgba(255,255,255,0.7);
+          font-size: 1.15rem;
+          line-height: 1.8;
+          max-width: 540px;
+          margin-bottom: 2.5rem;
+          font-weight: 300;
+          animation: fadeInUp 0.7s ease 0.2s both;
+        }
+        .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; animation: fadeInUp 0.7s ease 0.3s both; }
+        .btn-primary {
+          background: var(--accent);
+          color: white;
+          padding: 0.85rem 2rem;
+          border-radius: 50px;
+          font-weight: 500;
+          font-size: 0.95rem;
+          text-decoration: none;
+          border: none; cursor: pointer;
+          transition: transform 0.2s, box-shadow 0.2s;
+          display: inline-flex; align-items: center; gap: 8px;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(233,69,96,0.4); }
+        .btn-outline {
+          border: 1.5px solid rgba(255,255,255,0.3);
+          color: white;
+          padding: 0.85rem 2rem;
+          border-radius: 50px;
+          font-weight: 400;
+          font-size: 0.95rem;
+          text-decoration: none;
+          transition: border-color 0.2s, background 0.2s;
+          display: inline-flex; align-items: center; gap: 8px;
+        }
+        .btn-outline:hover { border-color: white; background: rgba(255,255,255,0.08); }
+        .hero-stats {
+          display: flex; gap: 2.5rem; margin-top: 3rem;
+          animation: fadeInUp 0.7s ease 0.4s both;
+        }
+        .stat { }
+        .stat-num {
+          font-family: 'Syne', sans-serif;
+          font-size: 1.8rem;
+          font-weight: 800;
+          color: white;
+        }
+        .stat-num span { color: var(--accent); }
+        .stat-label { font-size: 0.8rem; color: rgba(255,255,255,0.5); margin-top: 2px; letter-spacing: 0.5px; }
+        .hero-image {
+          position: absolute; right: 5%; top: 50%; transform: translateY(-50%);
+          width: 42%; max-width: 550px;
+          animation: float 4s ease-in-out infinite;
+        }
+        @keyframes float { 0%,100%{transform:translateY(-50%) translateX(0)} 50%{transform:translateY(-52%) translateX(-8px)} }
+        .hero-card {
+          background: rgba(255,255,255,0.07);
+          border: 1px solid rgba(255,255,255,0.12);
+          border-radius: 20px;
+          padding: 2rem;
+          backdrop-filter: blur(10px);
+        }
+        .hero-card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .mini-card {
+          background: rgba(255,255,255,0.06);
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 12px;
+          padding: 1rem;
+          text-align: center;
+        }
+        .mini-card .icon { font-size: 1.5rem; margin-bottom: 0.4rem; }
+        .mini-card .title { font-family: 'Syne',sans-serif; color: white; font-weight: 700; font-size: 1.2rem; }
+        .mini-card .sub { color: rgba(255,255,255,0.5); font-size: 0.72rem; }
+        .card-divider { border: none; border-top: 1px solid rgba(255,255,255,0.08); margin: 1.2rem 0; }
+        .card-courses { }
+        .course-pill {
+          display: flex; align-items: center; gap: 10px;
+          background: rgba(255,255,255,0.05);
+          border: 1px solid rgba(255,255,255,0.08);
+          border-radius: 10px;
+          padding: 0.7rem 1rem;
+          margin-bottom: 0.6rem;
+          transition: background 0.2s;
+        }
+        .course-pill:hover { background: rgba(255,255,255,0.1); }
+        .course-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+        .course-pill .name { color: white; font-size: 0.85rem; font-weight: 400; flex: 1; }
+        .course-pill .badge { background: rgba(233,69,96,0.2); color: #ff8fa3; font-size: 0.7rem; padding: 2px 8px; border-radius: 50px; }
+
+        /* ── ANIMATIONS ── */
+        @keyframes fadeInUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes fadeInDown { from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:translateY(0)} }
+
+        /* ── LOGOS STRIP ── */
+        .logos-strip {
+          background: var(--light);
+          padding: 1.5rem 5%;
+          border-top: 1px solid var(--border);
+          border-bottom: 1px solid var(--border);
+          overflow: hidden;
+        }
+        .logos-label { text-align: center; font-size: 0.8rem; color: var(--gray); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 1rem; }
+        .logos-track { display: flex; gap: 3rem; align-items: center; animation: scroll 20s linear infinite; width: max-content; }
+        .logo-item { font-family: 'Syne',sans-serif; font-weight: 700; font-size: 1rem; color: #9ca3af; white-space: nowrap; letter-spacing: -0.3px; }
+        @keyframes scroll { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+        /* ── SECTIONS ── */
+        section { padding: 5rem 5%; }
+        .section-label {
+          display: inline-block;
+          font-size: 0.75rem;
+          font-weight: 600;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          color: var(--accent);
+          margin-bottom: 0.75rem;
+        }
+        .section-title {
+          font-family: 'Syne', sans-serif;
+          font-size: clamp(1.8rem, 4vw, 2.8rem);
+          font-weight: 800;
+          color: var(--primary);
+          line-height: 1.15;
+          letter-spacing: -1px;
+          margin-bottom: 1rem;
+        }
+        .section-sub { font-size: 1rem; color: var(--gray); max-width: 500px; line-height: 1.7; font-weight: 300; }
+        .section-header { margin-bottom: 3rem; }
+        .section-header.center { text-align: center; }
+        .section-header.center .section-sub { margin: 0 auto; }
+
+        /* ── SERVICES ── */
+        .services { background: var(--white); }
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+        .service-card {
+          border: 1px solid var(--border);
+          border-radius: 20px;
+          padding: 2rem;
+          position: relative;
+          overflow: hidden;
+          transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+          cursor: pointer;
+          background: white;
+        }
+        .service-card::before {
+          content: '';
+          position: absolute; top: 0; left: 0; right: 0; height: 3px;
+          background: var(--accent);
+          transform: scaleX(0); transform-origin: left;
+          transition: transform 0.3s;
+        }
+        .service-card:hover::before { transform: scaleX(1); }
+        .service-card:hover { transform: translateY(-6px); box-shadow: var(--hover-shadow); border-color: transparent; }
+        .service-icon {
+          width: 52px; height: 52px;
+          border-radius: 14px;
+          display: flex; align-items: center; justify-content: center;
+          font-size: 1.4rem;
+          margin-bottom: 1.2rem;
+        }
+        .service-card h3 { font-family: 'Syne',sans-serif; font-weight: 700; font-size: 1.1rem; margin-bottom: 0.6rem; color: var(--primary); }
+        .service-card p { font-size: 0.88rem; color: var(--gray); line-height: 1.7; font-weight: 300; }
+        .service-arrow { position: absolute; bottom: 1.5rem; right: 1.5rem; color: var(--border); font-size: 1.1rem; transition: color 0.2s, transform 0.2s; }
+        .service-card:hover .service-arrow { color: var(--accent); transform: translate(3px,-3px); }
+
+        /* ── COURSES ── */
+        .courses { background: var(--light); }
+        .courses-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+        .course-card {
+          background: white;
+          border-radius: 20px;
+          overflow: hidden;
+          border: 1px solid var(--border);
+          transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .course-card:hover { transform: translateY(-6px); box-shadow: var(--card-shadow); }
+        .course-header {
+          padding: 1.8rem;
+          position: relative;
+        }
+        .course-tag {
+          display: inline-block;
+          font-size: 0.72rem;
+          font-weight: 600;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          padding: 4px 12px;
+          border-radius: 50px;
+          margin-bottom: 1rem;
+        }
+        .course-card h3 { font-family: 'Syne',sans-serif; font-weight: 700; font-size: 1.15rem; color: var(--primary); margin-bottom: 0.5rem; }
+        .course-card p { font-size: 0.85rem; color: var(--gray); line-height: 1.6; font-weight: 300; }
+        .course-meta {
+          padding: 1.2rem 1.8rem;
+          border-top: 1px solid var(--border);
+          display: flex; gap: 1.2rem; flex-wrap: wrap;
+        }
+        .meta-item { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--gray); }
+        .meta-icon { font-size: 0.9rem; }
+        .course-footer {
+          padding: 1rem 1.8rem;
+          display: flex; align-items: center; justify-content: space-between;
+          border-top: 1px solid var(--border);
+        }
+        .course-price { font-family: 'Syne',sans-serif; font-weight: 700; font-size: 1.1rem; color: var(--primary); }
+        .course-enroll {
+          background: var(--primary);
+          color: white;
+          padding: 0.5rem 1.2rem;
+          border-radius: 50px;
+          font-size: 0.82rem;
+          font-weight: 500;
+          text-decoration: none;
+          transition: background 0.2s;
+        }
+        .course-enroll:hover { background: var(--accent); }
+
+        /* ── STATS ── */
+        .stats-section {
+          background: var(--gradient);
+          padding: 5rem 5%;
+          position: relative;
+          overflow: hidden;
+        }
+        .stats-section::before {
+          content:'';position:absolute;inset:0;
+          background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 2rem; position: relative; z-index: 1; }
+        .stats-item { text-align: center; }
+        .stats-number {
+          font-family: 'Syne', sans-serif;
+          font-size: 3rem; font-weight: 800;
+          color: white;
+          line-height: 1;
+          margin-bottom: 0.4rem;
+        }
+        .stats-number span { color: var(--accent); }
+        .stats-label { color: rgba(255,255,255,0.55); font-size: 0.85rem; letter-spacing: 0.5px; }
+
+        /* ── WHY US ── */
+        .why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+        .why-visual {
+          position: relative;
+          background: var(--gradient);
+          border-radius: 24px;
+          padding: 2.5rem;
+          overflow: hidden;
+        }
+        .why-visual::after {
+          content:''; position:absolute;
+          width:200px; height:200px;
+          background:var(--accent); border-radius:50%;
+          bottom:-60px; right:-60px; opacity:0.15; filter:blur(40px);
+        }
+        .why-list { list-style: none; margin-bottom: 2rem; }
+        .why-item {
+          display: flex; align-items: flex-start; gap: 1rem;
+          padding: 1rem 0;
+          border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .why-item:last-child { border-bottom: none; }
+        .why-check {
+          width: 28px; height: 28px;
+          background: rgba(233,69,96,0.2);
+          border-radius: 50%;
+          display: flex; align-items: center; justify-content: center;
+          font-size: 0.8rem;
+          flex-shrink: 0;
+          margin-top: 2px;
+        }
+        .why-item-title { color: white; font-weight: 500; font-size: 0.95rem; margin-bottom: 2px; }
+        .why-item-desc { color: rgba(255,255,255,0.5); font-size: 0.82rem; font-weight: 300; }
+        .why-features { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .why-feature {
+          padding: 1.5rem;
+          border: 1px solid var(--border);
+          border-radius: 16px;
+          transition: border-color 0.2s, transform 0.2s;
+        }
+        .why-feature:hover { border-color: var(--accent); transform: translateY(-3px); }
+        .why-feature-icon { font-size: 1.5rem; margin-bottom: 0.6rem; }
+        .why-feature h4 { font-family: 'Syne',sans-serif; font-weight: 700; font-size: 0.95rem; color: var(--primary); margin-bottom: 0.3rem; }
+        .why-feature p { font-size: 0.8rem; color: var(--gray); line-height: 1.6; font-weight: 300; }
+
+        /* ── TESTIMONIALS ── */
+        .testimonials { background: var(--light); }
+        .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+        .testimonial-card {
+          background: white;
+          border: 1px solid var(--border);
+          border-radius: 20px;
+          padding: 1.8rem;
+          position: relative;
+          transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .testimonial-card:hover { transform: translateY(-4px); box-shadow: var(--card-shadow); }
+        .testimonial-card.featured {
+          background: var(--primary);
+          border-color: transparent;
+        }
+        .quote-icon {
+          font-size: 2.5rem;
+          line-height: 1;
+          color: var(--accent);
+          font-family: Georgia, serif;
+          margin-bottom: 0.5rem;
+          opacity: 0.6;
+        }
+        .testimonial-text { font-size: 0.9rem; line-height: 1.8; color: var(--gray); margin-bottom: 1.2rem; font-weight: 300; font-style: italic; }
+        .testimonial-card.featured .testimonial-text { color: rgba(255,255,255,0.7); }
+        .testimonial-author { display: flex; align-items: center; gap: 0.8rem; }
+        .author-avatar {
+          width: 40px; height: 40px; border-radius: 50%;
+          display: flex; align-items: center; justify-content: center;
+          font-family: 'Syne',sans-serif; font-weight: 700; font-size: 0.9rem;
+          color: white;
+          flex-shrink: 0;
+        }
+        .author-name { font-weight: 500; font-size: 0.88rem; color: var(--primary); }
+        .testimonial-card.featured .author-name { color: white; }
+        .author-role { font-size: 0.76rem; color: var(--gray); }
+        .testimonial-card.featured .author-role { color: rgba(255,255,255,0.5); }
+        .stars { color: var(--gold); font-size: 0.8rem; margin-bottom: 0.8rem; }
+
+        /* ── JOBS ── */
+        .jobs-section { background: white; }
+        .jobs-grid { display: grid; gap: 1rem; }
+        .job-card {
+          border: 1px solid var(--border);
+          border-radius: 16px;
+          padding: 1.5rem;
+          display: flex; align-items: center; gap: 1.5rem;
+          transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+          background: white;
+          text-decoration: none;
+        }
+        .job-card:hover { transform: translateX(4px); box-shadow: var(--card-shadow); border-color: var(--accent); }
+        .job-company-logo {
+          width: 50px; height: 50px; border-radius: 12px;
+          background: var(--light);
+          border: 1px solid var(--border);
+          display: flex; align-items: center; justify-content: center;
+          font-family: 'Syne',sans-serif; font-weight: 800; font-size: 0.85rem;
+          color: var(--accent2);
+          flex-shrink: 0;
+        }
+        .job-info { flex: 1; }
+        .job-title { font-family: 'Syne',sans-serif; font-weight: 700; font-size: 1rem; color: var(--primary); margin-bottom: 3px; }
+        .job-company { font-size: 0.82rem; color: var(--gray); }
+        .job-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.6rem; }
+        .job-tag {
+          font-size: 0.72rem;
+          padding: 3px 10px;
+          border-radius: 50px;
+          font-weight: 500;
+        }
+        .tag-location { background: #f0f9ff; color: #0369a1; }
+        .tag-type { background: #f0fdf4; color: #166534; }
+        .tag-exp { background: #fdf4ff; color: #7e22ce; }
+        .job-salary { font-family: 'Syne',sans-serif; font-weight: 700; color: var(--primary); font-size: 0.95rem; text-align: right; }
+        .job-salary-label { font-size: 0.72rem; color: var(--gray); font-weight: 300; margin-bottom: 2px; }
+        .view-all-link {
+          display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+          color: var(--accent);
+          text-decoration: none;
+          font-weight: 500;
+          margin-top: 2rem;
+          font-size: 0.9rem;
+          transition: gap 0.2s;
+        }
+        .view-all-link:hover { gap: 0.8rem; }
+
+        /* ── CTA SECTION ── */
+        .cta-section {
+          background: var(--accent);
+          padding: 5rem 5%;
+          text-align: center;
+          position: relative;
+          overflow: hidden;
+        }
+        .cta-section::before {
+          content:'';position:absolute;
+          width:400px;height:400px;
+          background:rgba(255,255,255,0.08);border-radius:50%;
+          top:-100px;left:-100px;
+        }
+        .cta-section::after {
+          content:'';position:absolute;
+          width:300px;height:300px;
+          background:rgba(255,255,255,0.06);border-radius:50%;
+          bottom:-80px;right:-80px;
+        }
+        .cta-section h2 {
+          font-family: 'Syne',sans-serif;
+          font-size: clamp(1.8rem,4vw,2.8rem);
+          font-weight: 800;
+          color: white;
+          margin-bottom: 1rem;
+          letter-spacing: -0.5px;
+          position: relative; z-index: 1;
+        }
+        .cta-section p { color: rgba(255,255,255,0.8); font-size: 1rem; max-width: 500px; margin: 0 auto 2rem; line-height: 1.7; position:relative;z-index:1; }
+        .cta-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; position:relative;z-index:1; }
+        .btn-white {
+          background: white; color: var(--accent);
+          padding: 0.85rem 2rem;
+          border-radius: 50px;
+          font-weight: 600;
+          text-decoration: none;
+          font-size: 0.9rem;
+          transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
+        .btn-ghost {
+          border: 2px solid rgba(255,255,255,0.5);
+          color: white;
+          padding: 0.85rem 2rem;
+          border-radius: 50px;
+          font-weight: 400;
+          text-decoration: none;
+          font-size: 0.9rem;
+          transition: border-color 0.2s, background 0.2s;
+        }
+        .btn-ghost:hover { border-color: white; background: rgba(255,255,255,0.1); }
+
+        /* ── FOOTER ── */
+        footer {
+          background: var(--primary);
+          color: rgba(255,255,255,0.7);
+          padding: 4rem 5% 2rem;
+        }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+        .footer-brand .nav-logo { display: block; margin-bottom: 1rem; }
+        .footer-desc { font-size: 0.85rem; line-height: 1.7; max-width: 260px; font-weight: 300; }
+        .footer-socials { display: flex; gap: 0.75rem; margin-top: 1.5rem; }
+        .social-btn {
+          width: 36px; height: 36px;
+          background: rgba(255,255,255,0.08);
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 8px;
+          display: flex; align-items: center; justify-content: center;
+          font-size: 0.85rem;
+          color: rgba(255,255,255,0.6);
+          cursor: pointer;
+          transition: background 0.2s;
+          text-decoration: none;
+        }
+        .social-btn:hover { background: var(--accent); color: white; border-color: var(--accent); }
+        .footer-col h4 { font-family: 'Syne',sans-serif; font-weight: 700; color: white; font-size: 0.9rem; margin-bottom: 1.2rem; }
+        .footer-links { list-style: none; }
+        .footer-links li { margin-bottom: 0.6rem; }
+        .footer-links a { color: rgba(255,255,255,0.55); text-decoration: none; font-size: 0.83rem; transition: color 0.2s; font-weight: 300; }
+        .footer-links a:hover { color: white; }
+        .footer-bottom {
+          border-top: 1px solid rgba(255,255,255,0.08);
+          padding-top: 1.5rem;
+          display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+          font-size: 0.8rem;
+        }
+        .footer-contact { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+        .contact-item { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; }
+
+        /* ── SCROLL ANIMATION ── */
+        .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+
+        /* ── MOBILE ── */
+        @media(max-width:900px) {
+          .hero-image { display: none; }
+          .why-grid { grid-template-columns: 1fr; }
+          .footer-grid { grid-template-columns: 1fr 1fr; }
+        }
+        @media(max-width:600px) {
+          .nav-links { display: none; }
+          .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 70px; left: 0; right: 0; background: var(--primary); padding: 1.5rem 5%; gap: 1rem; }
+          .hamburger { display: flex; }
+          .hero-stats { gap: 1.5rem; }
+          .footer-grid { grid-template-columns: 1fr; }
+          .why-features { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 <body>
 
+<!-- NAVBAR -->
+<nav id="navbar">
+    <a href="index.html" class="nav-logo">Vibrant<span>Minds</span></a>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="jobs.html">Jobs</a></li>
+        <li><a href="courses.html">Courses</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="login.html">Login</a></li>
+        <li><a href="register.html" class="nav-cta">Register Free</a></li>
+    </ul>
+    <div class="hamburger" onclick="toggleMenu()">
+        <span></span><span></span><span></span>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-blob blob1"></div>
+    <div class="hero-blob blob2"></div>
+    <div class="hero-content">
+        <div class="hero-badge">
+            <span class="badge-dot"></span>
+            10+ Years of Excellence in IT Training
+        </div>
+        <h2>Launch Your <em>IT Career</em> With Confidence</h2>
+        <p>Bridge the gap between education and industry. Get trained by experts, get placed in top companies. Over 15,000 students placed successfully.</p>
+        <div class="hero-actions">
+            <a href="courses.html" class="btn-primary">Explore Courses →</a>
+            <a href="jobs.html" class="btn-outline">Browse Jobs</a>
+        </div>
+        <div class="hero-stats">
+            <div class="stat">
+                <div class="stat-num">15K<span>+</span></div>
+                <div class="stat-label">Students Placed</div>
+            </div>
+            <div class="stat">
+                <div class="stat-num">500<span>+</span></div>
+                <div class="stat-label">Partner Companies</div>
+            </div>
+            <div class="stat">
+                <div class="stat-num">10<span>+</span></div>
+                <div class="stat-label">Years Experience</div>
+            </div>
+        </div>
+    </div>
+    <div class="hero-image">
+        <div class="hero-card">
+            <div class="hero-card-grid">
+                <div class="mini-card">
+                    <div class="icon">🎓</div>
+                    <div class="title">500+</div>
+                    <div class="sub">Batches Completed</div>
+                </div>
+                <div class="mini-card">
+                    <div class="icon">💼</div>
+                    <div class="title">98%</div>
+                    <div class="sub">Placement Rate</div>
+                </div>
+                <div class="mini-card">
+                    <div class="icon">⭐</div>
+                    <div class="title">4.9</div>
+                    <div class="sub">Google Rating</div>
+                </div>
+                <div class="mini-card">
+                    <div class="icon">🏢</div>
+                    <div class="title">200+</div>
+                    <div class="sub">Colleges Tied-up</div>
+                </div>
+            </div>
+            <hr class="card-divider"/>
+            <div class="card-courses">
+                <div class="course-pill">
+                    <span class="course-dot" style="background:#e94560"></span>
+                    <span class="name">Java Full Stack</span>
+                    <span class="badge">Trending</span>
+                </div>
+                <div class="course-pill">
+                    <span class="course-dot" style="background:#f5a623"></span>
+                    <span class="name">Software Testing</span>
+                    <span class="badge">Popular</span>
+                </div>
+                <div class="course-pill">
+                    <span class="course-dot" style="background:#10b981"></span>
+                    <span class="name">React + Node.js</span>
+                    <span class="badge">New</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- LOGOS STRIP -->
+<div class="logos-strip">
+    <p class="logos-label">Trusted by 500+ companies across India</p>
+    <div style="overflow:hidden">
+        <div class="logos-track">
+            <span class="logo-item">TCS</span>
+            <span class="logo-item">Infosys</span>
+            <span class="logo-item">Wipro</span>
+            <span class="logo-item">Capgemini</span>
+            <span class="logo-item">Accenture</span>
+            <span class="logo-item">Cognizant</span>
+            <span class="logo-item">Tech Mahindra</span>
+            <span class="logo-item">HCL</span>
+            <span class="logo-item">Persistent</span>
+            <span class="logo-item">Mphasis</span>
+            <span class="logo-item">LTIMindtree</span>
+            <span class="logo-item">Zensar</span>
+            <!-- duplicate for seamless loop -->
+            <span class="logo-item">TCS</span>
+            <span class="logo-item">Infosys</span>
+            <span class="logo-item">Wipro</span>
+            <span class="logo-item">Capgemini</span>
+            <span class="logo-item">Accenture</span>
+            <span class="logo-item">Cognizant</span>
+            <span class="logo-item">Tech Mahindra</span>
+            <span class="logo-item">HCL</span>
+            <span class="logo-item">Persistent</span>
+            <span class="logo-item">Mphasis</span>
+            <span class="logo-item">LTIMindtree</span>
+            <span class="logo-item">Zensar</span>
+        </div>
+    </div>
+</div>
+
+<!-- SERVICES -->
+<section class="services">
+    <div class="section-header reveal">
+        <span class="section-label">What We Do</span>
+        <h2 class="section-title">Everything You Need to<br>Succeed in IT</h2>
+        <p class="section-sub">From training to placement — we are your complete career partner.</p>
+    </div>
+    <div class="services-grid">
+        <div class="service-card reveal reveal-delay-1">
+            <div class="service-icon" style="background:#fff0f3">🎓</div>
+            <h3>IT Training</h3>
+            <p>Industry-relevant courses taught by experienced professionals. Hands-on projects, real-world coding, and comprehensive placement prep.</p>
+            <div class="service-arrow">↗</div>
+        </div>
+        <div class="service-card reveal reveal-delay-2">
+            <div class="service-icon" style="background:#f0f9ff">🏢</div>
+            <h3>Campus Recruitment</h3>
+            <p>We connect colleges with top companies for on-campus and off-campus hiring drives. Bridging the gap between education and industry.</p>
+            <div class="service-arrow">↗</div>
+        </div>
+        <div class="service-card reveal reveal-delay-3">
+            <div class="service-icon" style="background:#f0fdf4">📝</div>
+            <h3>Online Assessments</h3>
+            <p>Evaluate candidates with our comprehensive assessment platform. Skill tests, aptitude, coding challenges and behavioral assessments.</p>
+            <div class="service-arrow">↗</div>
+        </div>
+        <div class="service-card reveal reveal-delay-1">
+            <div class="service-icon" style="background:#fdf4ff">💼</div>
+            <h3>Job Placement</h3>
+            <p>Access our network of 500+ partner companies. Apply for jobs, attend placement drives and land your dream IT role.</p>
+            <div class="service-arrow">↗</div>
+        </div>
+        <div class="service-card reveal reveal-delay-2">
+            <div class="service-icon" style="background:#fffbeb">🎯</div>
+            <h3>Talent Evaluation</h3>
+            <p>End-to-end talent evaluation solutions for companies. Resume screening, technical interviews, and shortlisting made easy.</p>
+            <div class="service-arrow">↗</div>
+        </div>
+        <div class="service-card reveal reveal-delay-3">
+            <div class="service-icon" style="background:#fff7ed">🤝</div>
+            <h3>HR Consulting</h3>
+            <p>Strategic manpower planning and HR solutions for startups and enterprises. Hire the right talent at the right time.</p>
+            <div class="service-arrow">↗</div>
+        </div>
+    </div>
+</section>
+
+<!-- COURSES -->
+<section class="courses">
+    <div class="section-header center reveal">
+        <span class="section-label">Our Courses</span>
+        <h2 class="section-title">Start Your Journey Today</h2>
+        <p class="section-sub">Job-ready courses designed with industry experts to get you placed fast.</p>
+    </div>
+    <div class="courses-grid" id="coursesGrid">
+        <div class="course-card reveal reveal-delay-1">
+            <div class="course-header" style="background:linear-gradient(135deg,#fff0f3,#fff5f5)">
+                <span class="course-tag" style="background:#ffe4e8;color:#be123c">🔥 Most Popular</span>
+                <h3>Java Full Stack Developer</h3>
+                <p>Master Core Java, Spring Boot, Hibernate, React, MySQL and Git. Build 5 real-world projects.</p>
+            </div>
+            <div class="course-meta">
+                <div class="meta-item"><span class="meta-icon">⏱</span> 6 Months</div>
+                <div class="meta-item"><span class="meta-icon">📍</span> Offline / Hybrid</div>
+                <div class="meta-item"><span class="meta-icon">🎓</span> Certificate</div>
+            </div>
+            <div class="course-footer">
+                <div class="course-price">₹15,000</div>
+                <a href="courses.html" class="course-enroll">Enroll Now</a>
+            </div>
+        </div>
+        <div class="course-card reveal reveal-delay-2">
+            <div class="course-header" style="background:linear-gradient(135deg,#f0f9ff,#f0f4ff)">
+                <span class="course-tag" style="background:#dbeafe;color:#1e40af">⭐ High Demand</span>
+                <h3>Software Testing (Manual + Automation)</h3>
+                <p>Learn Selenium, TestNG, Postman, JIRA and Agile methodologies. 100% job assistance.</p>
+            </div>
+            <div class="course-meta">
+                <div class="meta-item"><span class="meta-icon">⏱</span> 4 Months</div>
+                <div class="meta-item"><span class="meta-icon">📍</span> Offline</div>
+                <div class="meta-item"><span class="meta-icon">🎓</span> Certificate</div>
+            </div>
+            <div class="course-footer">
+                <div class="course-price">₹12,000</div>
+                <a href="courses.html" class="course-enroll">Enroll Now</a>
+            </div>
+        </div>
+        <div class="course-card reveal reveal-delay-3">
+            <div class="course-header" style="background:linear-gradient(135deg,#f0fdf4,#ecfdf5)">
+                <span class="course-tag" style="background:#dcfce7;color:#166534">🆕 New Batch</span>
+                <h3>React + Node.js Full Stack</h3>
+                <p>Build modern web apps with React, Node.js, Express, MongoDB. Deploy on AWS and get hired.</p>
+            </div>
+            <div class="course-meta">
+                <div class="meta-item"><span class="meta-icon">⏱</span> 5 Months</div>
+                <div class="meta-item"><span class="meta-icon">📍</span> Hybrid</div>
+                <div class="meta-item"><span class="meta-icon">🎓</span> Certificate</div>
+            </div>
+            <div class="course-footer">
+                <div class="course-price">₹14,000</div>
+                <a href="courses.html" class="course-enroll">Enroll Now</a>
+            </div>
+        </div>
+    </div>
+    <a href="courses.html" class="view-all-link reveal">View All Courses →</a>
+</section>
+
+<!-- STATS -->
+<div class="stats-section">
+    <div class="stats-grid">
+        <div class="stats-item reveal">
+            <div class="stats-number"><span id="stat1">0</span><span>+</span></div>
+            <div class="stats-label">Students Placed</div>
+        </div>
+        <div class="stats-item reveal reveal-delay-1">
+            <div class="stats-number"><span id="stat2">0</span><span>+</span></div>
+            <div class="stats-label">Partner Companies</div>
+        </div>
+        <div class="stats-item reveal reveal-delay-2">
+            <div class="stats-number"><span id="stat3">0</span><span>+</span></div>
+            <div class="stats-label">College Tie-ups</div>
+        </div>
+        <div class="stats-item reveal reveal-delay-3">
+            <div class="stats-number"><span id="stat4">0</span><span>%</span></div>
+            <div class="stats-label">Placement Rate</div>
+        </div>
+    </div>
+</div>
+
+<!-- WHY US -->
+<section style="background:white;padding:5rem 5%">
+    <div class="why-grid">
+        <div class="why-visual reveal">
+            <ul class="why-list">
+                <li class="why-item">
+                    <div class="why-check">✓</div>
+                    <div>
+                        <div class="why-item-title">Expert Trainers with 10+ Years Industry Experience</div>
+                        <div class="why-item-desc">Learn from practitioners, not just professors.</div>
+                    </div>
+                </li>
+                <li class="why-item">
+                    <div class="why-check">✓</div>
+                    <div>
+                        <div class="why-item-title">Real Projects & Hands-on Learning</div>
+                        <div class="why-item-desc">Build portfolio projects that impress interviewers.</div>
+                    </div>
+                </li>
+                <li class="why-item">
+                    <div class="why-check">✓</div>
+                    <div>
+                        <div class="why-item-title">Unlimited Placement Drives</div>
+                        <div class="why-item-desc">Attend as many drives as needed until you get placed.</div>
+                    </div>
+                </li>
+                <li class="why-item">
+                    <div class="why-check">✓</div>
+                    <div>
+                        <div class="why-item-title">Aptitude, GD & Interview Preparation</div>
+                        <div class="why-item-desc">Complete interview readiness program included.</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div>
+            <div class="section-header reveal">
+                <span class="section-label">Why VibrantMinds</span>
+                <h2 class="section-title">We Don't Just Train — We Get You Placed</h2>
+                <p class="section-sub">Our commitment doesn't end in the classroom. We stay with you until you land your first IT job.</p>
+            </div>
+            <div class="why-features reveal">
+                <div class="why-feature">
+                    <div class="why-feature-icon">📚</div>
+                    <h4>Updated Curriculum</h4>
+                    <p>Course content updated every quarter based on industry demands.</p>
+                </div>
+                <div class="why-feature">
+                    <div class="why-feature-icon">👥</div>
+                    <h4>Small Batch Size</h4>
+                    <p>Max 20 students per batch. Personalized attention guaranteed.</p>
+                </div>
+                <div class="why-feature">
+                    <div class="why-feature-icon">💻</div>
+                    <h4>Lab Facility</h4>
+                    <p>State-of-the-art computer labs with high-speed internet.</p>
+                </div>
+                <div class="why-feature">
+                    <div class="why-feature-icon">🎯</div>
+                    <h4>Mock Interviews</h4>
+                    <p>Weekly mock interviews with industry experts to prep you up.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- JOBS PREVIEW -->
+<section class="jobs-section">
+    <div class="section-header reveal" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem">
+        <div>
+            <span class="section-label">Latest Openings</span>
+            <h2 class="section-title" style="margin-bottom:0">Hot Jobs Right Now</h2>
+        </div>
+        <a href="jobs.html" class="view-all-link" style="margin-top:0">View All Jobs →</a>
+    </div>
+    <div class="jobs-grid" id="jobsGrid">
+        <a href="jobs.html" class="job-card reveal">
+            <div class="job-company-logo">TCS</div>
+            <div class="job-info">
+                <div class="job-title">Java Full Stack Developer</div>
+                <div class="job-company">Tata Consultancy Services</div>
+                <div class="job-tags">
+                    <span class="job-tag tag-location">📍 Pune</span>
+                    <span class="job-tag tag-type">Full Time</span>
+                    <span class="job-tag tag-exp">Fresher</span>
+                </div>
+            </div>
+            <div>
+                <div class="job-salary-label">Package</div>
+                <div class="job-salary">3.5 LPA</div>
+            </div>
+        </a>
+        <a href="jobs.html" class="job-card reveal reveal-delay-1">
+            <div class="job-company-logo">INF</div>
+            <div class="job-info">
+                <div class="job-title">QA Test Engineer</div>
+                <div class="job-company">Infosys Limited</div>
+                <div class="job-tags">
+                    <span class="job-tag tag-location">📍 Bangalore</span>
+                    <span class="job-tag tag-type">Full Time</span>
+                    <span class="job-tag tag-exp">0-1 Yr</span>
+                </div>
+            </div>
+            <div>
+                <div class="job-salary-label">Package</div>
+                <div class="job-salary">4.0 LPA</div>
+            </div>
+        </a>
+        <a href="jobs.html" class="job-card reveal reveal-delay-2">
+            <div class="job-company-logo">WIP</div>
+            <div class="job-info">
+                <div class="job-title">React Developer</div>
+                <div class="job-company">Wipro Technologies</div>
+                <div class="job-tags">
+                    <span class="job-tag tag-location">📍 Hyderabad</span>
+                    <span class="job-tag tag-type">Full Time</span>
+                    <span class="job-tag tag-exp">Fresher</span>
+                </div>
+            </div>
+            <div>
+                <div class="job-salary-label">Package</div>
+                <div class="job-salary">4.5 LPA</div>
+            </div>
+        </a>
+        <a href="jobs.html" class="job-card reveal reveal-delay-3">
+            <div class="job-company-logo">CAP</div>
+            <div class="job-info">
+                <div class="job-title">Spring Boot Developer</div>
+                <div class="job-company">Capgemini India</div>
+                <div class="job-tags">
+                    <span class="job-tag tag-location">📍 Mumbai</span>
+                    <span class="job-tag tag-type">Full Time</span>
+                    <span class="job-tag tag-exp">0-2 Yrs</span>
+                </div>
+            </div>
+            <div>
+                <div class="job-salary-label">Package</div>
+                <div class="job-salary">5.0 LPA</div>
+            </div>
+        </a>
+    </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+    <div class="section-header center reveal">
+        <span class="section-label">Success Stories</span>
+        <h2 class="section-title">Students Who Made It Big</h2>
+        <p class="section-sub">Real stories from real students who transformed their careers with VibrantMinds.</p>
+    </div>
+    <div class="testimonials-grid">
+        <div class="testimonial-card featured reveal">
+            <div class="quote-icon">"</div>
+            <div class="stars">★★★★★</div>
+            <p class="testimonial-text">VibrantMinds completely changed my life. I was a mechanical engineer with zero coding knowledge. In just 6 months of Java Full Stack training, I got placed at TCS with 4.5 LPA. The trainers are incredible and the placement support is unmatched!</p>
+            <div class="testimonial-author">
+                <div class="author-avatar" style="background:var(--accent)">RS</div>
+                <div>
+                    <div class="author-name">Rahul Sharma</div>
+                    <div class="author-role">Java Developer @ TCS, Pune</div>
+                </div>
+            </div>
+        </div>
+        <div class="testimonial-card reveal reveal-delay-1">
+            <div class="quote-icon">"</div>
+            <div class="stars">★★★★★</div>
+            <p class="testimonial-text">Best IT institute in Pune hands down. The aptitude + GD + technical sessions prepared me thoroughly. Got placed at Infosys in the very first drive. The batch size is small so you get personal attention.</p>
+            <div class="testimonial-author">
+                <div class="author-avatar" style="background:#0f3460">PP</div>
+                <div>
+                    <div class="author-name">Priya Patil</div>
+                    <div class="author-role">QA Engineer @ Infosys, Bangalore</div>
+                </div>
+            </div>
+        </div>
+        <div class="testimonial-card reveal reveal-delay-2">
+            <div class="quote-icon">"</div>
+            <div class="stars">★★★★★</div>
+            <p class="testimonial-text">I tried self-learning for 1 year but couldn't crack interviews. Joined VibrantMinds and in 4 months, got placed at Wipro. The mock interviews here are exactly like real ones. Highly recommend!</p>
+            <div class="testimonial-author">
+                <div class="author-avatar" style="background:#059669">AK</div>
+                <div>
+                    <div class="author-name">Amit Kumar</div>
+                    <div class="author-role">React Developer @ Wipro, Hyderabad</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section">
+    <h2>Ready to Start Your IT Journey?</h2>
+    <p>Join 15,000+ students who launched their IT careers with VibrantMinds. Register for a free demo class today.</p>
+    <div class="cta-btns">
+        <a href="register.html" class="btn-white">Register for Free Demo</a>
+        <a href="contact.html" class="btn-ghost">Talk to a Counsellor</a>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+    <div class="footer-grid">
+        <div class="footer-brand">
+            <a href="index.html" class="nav-logo">Vibrant<span>Minds</span></a>
+            <p class="footer-desc">Bridging the gap between education and industry. Empowering students with skills, knowledge, and opportunities to launch successful IT careers.</p>
+            <div class="footer-socials">
+                <a href="#" class="social-btn">in</a>
+                <a href="#" class="social-btn">fb</a>
+                <a href="#" class="social-btn">ig</a>
+                <a href="#" class="social-btn">yt</a>
+            </div>
+        </div>
+        <div class="footer-col">
+            <h4>Quick Links</h4>
+            <ul class="footer-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="courses.html">Courses</a></li>
+                <li><a href="jobs.html">Job Listings</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Courses</h4>
+            <ul class="footer-links">
+                <li><a href="courses.html">Java Full Stack</a></li>
+                <li><a href="courses.html">Software Testing</a></li>
+                <li><a href="courses.html">React + Node.js</a></li>
+                <li><a href="courses.html">Python Django</a></li>
+                <li><a href="courses.html">Data Science</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>For Partners</h4>
+            <ul class="footer-links">
+                <li><a href="#">For Companies</a></li>
+                <li><a href="#">For Colleges</a></li>
+                <li><a href="#">Campus Hiring</a></li>
+                <li><a href="#">Online Assessment</a></li>
+                <li><a href="#">Post a Job</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <span>© 2024 VibrantMinds Technologies Pvt. Ltd. All rights reserved.</span>
+        <div class="footer-contact">
+            <span class="contact-item">📍 Viva Building, Warje, Pune 411058</span>
+            <span class="contact-item">📞 +91 95035 79517</span>
+            <span class="contact-item">✉ support@vibrantmindstech.com</span>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // NAV MENU TOGGLE
+    function toggleMenu() {
+      document.getElementById('navLinks').classList.toggle('open');
+    }
+
+    // SCROLL REVEAL
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    reveals.forEach(r => observer.observe(r));
+
+    // COUNTER ANIMATION
+    function animateCounter(el, target, suffix='') {
+      let current = 0;
+      const step = target / 60;
+      const timer = setInterval(() => {
+        current += step;
+        if(current >= target) { el.textContent = target; clearInterval(timer); }
+        else { el.textContent = Math.floor(current); }
+      }, 25);
+    }
+
+    const statsObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if(e.isIntersecting) {
+          animateCounter(document.getElementById('stat1'), 15000);
+          animateCounter(document.getElementById('stat2'), 500);
+          animateCounter(document.getElementById('stat3'), 200);
+          animateCounter(document.getElementById('stat4'), 98);
+          statsObserver.disconnect();
+        }
+      });
+    }, { threshold: 0.3 });
+    statsObserver.observe(document.querySelector('.stats-section'));
+
+    // NAVBAR SCROLL
+    window.addEventListener('scroll', () => {
+      const nav = document.getElementById('navbar');
+      if(window.scrollY > 50) {
+        nav.style.background = 'rgba(26,26,46,0.98)';
+        nav.style.boxShadow = '0 4px 24px rgba(0,0,0,0.2)';
+      } else {
+        nav.style.background = 'rgba(26,26,46,0.95)';
+        nav.style.boxShadow = 'none';
+      }
+    });
+
+    // FETCH JOBS FROM API (when backend is connected)
+    // fetch('/api/jobs')
+    //   .then(r => r.json())
+    //   .then(data => {
+    //     if(data.success) renderJobs(data.data.slice(0,4));
+    //   });
+
+    // FETCH COURSES FROM API (when backend is connected)
+    // fetch('/api/courses')
+    //   .then(r => r.json())
+    //   .then(data => {
+    //     if(data.success) renderCourses(data.data.slice(0,3));
+    //   });
+</script>
 </body>
 </html>
