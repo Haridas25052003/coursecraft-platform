@@ -1,10 +1,881 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>My Dashboard – VibrantMinds</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet"/>
+    <style>
+        :root{
+          --primary:#1a1a2e; --accent:#e94560; --accent2:#0f3460;
+          --gold:#f5a623; --light:#f8f9ff; --white:#fff;
+          --gray:#6b7280; --border:#e5e7eb;
+          --gradient:linear-gradient(135deg,#1a1a2e 0%,#0f3460 50%,#16213e 100%);
+          --sidebar-w:260px;
+        }
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--primary);display:flex;min-height:100vh;}
+
+        /* ── SIDEBAR ── */
+        .sidebar{
+          width:var(--sidebar-w); min-height:100vh;
+          background:var(--gradient); position:fixed; left:0; top:0; bottom:0;
+          display:flex; flex-direction:column; z-index:200;
+          transition:transform 0.3s;
+        }
+        .sidebar-logo{padding:1.8rem 1.5rem 1.2rem; border-bottom:1px solid rgba(255,255,255,0.08);}
+        .logo-link{font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:white;text-decoration:none;}
+        .logo-link span{color:var(--accent);}
+        .sidebar-user{padding:1.2rem 1.5rem; border-bottom:1px solid rgba(255,255,255,0.08); display:flex; align-items:center; gap:0.8rem;}
+        .user-avatar{width:40px;height:40px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:0.9rem;color:white;flex-shrink:0;}
+        .user-name{font-size:0.85rem;color:white;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+        .user-role{font-size:0.7rem;color:rgba(255,255,255,0.5);}
+        .sidebar-nav{flex:1;padding:1rem 0;overflow-y:auto;}
+        .nav-section-label{font-size:0.62rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.3);padding:0.5rem 1.5rem 0.3rem;}
+        .nav-item{display:flex;align-items:center;gap:0.75rem;padding:0.7rem 1.5rem;color:rgba(255,255,255,0.65);text-decoration:none;font-size:0.85rem;transition:all 0.2s;border-left:3px solid transparent;cursor:pointer;}
+        .nav-item:hover{color:white;background:rgba(255,255,255,0.06);border-left-color:rgba(255,255,255,0.3);}
+        .nav-item.active{color:white;background:rgba(233,69,96,0.15);border-left-color:var(--accent);}
+        .nav-icon{font-size:1rem;width:20px;text-align:center;flex-shrink:0;}
+        .nav-badge{margin-left:auto;background:var(--accent);color:white;font-size:0.62rem;font-weight:700;padding:2px 7px;border-radius:50px;}
+        .sidebar-footer{padding:1.2rem 1.5rem;border-top:1px solid rgba(255,255,255,0.08);}
+        .logout-btn{display:flex;align-items:center;gap:0.75rem;color:rgba(255,255,255,0.5);font-size:0.84rem;cursor:pointer;transition:color 0.2s;background:none;border:none;font-family:'DM Sans',sans-serif;padding:0;}
+        .logout-btn:hover{color:var(--accent);}
+
+        /* ── MAIN CONTENT ── */
+        .main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh;}
+
+        /* TOP BAR */
+        .topbar{background:white;border-bottom:1px solid var(--border);padding:0 2rem;height:65px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+        .topbar-left{display:flex;align-items:center;gap:1rem;}
+        .menu-toggle{background:none;border:none;cursor:pointer;font-size:1.3rem;display:none;}
+        .page-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;color:var(--primary);}
+        .topbar-right{display:flex;align-items:center;gap:1rem;}
+        .topbar-btn{background:none;border:1.5px solid var(--border);border-radius:10px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;transition:border-color 0.2s;position:relative;}
+        .topbar-btn:hover{border-color:var(--accent);}
+        .notif-dot{position:absolute;top:6px;right:6px;width:7px;height:7px;background:var(--accent);border-radius:50%;border:2px solid white;}
+        .topbar-avatar{width:36px;height:36px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:0.8rem;color:white;cursor:pointer;}
+
+        /* PAGE CONTENT */
+        .content{padding:2rem;flex:1;}
+
+        /* SECTION PAGES */
+        .page-section{display:none;}
+        .page-section.active{display:block;}
+
+        /* WELCOME BANNER */
+        .welcome-banner{background:var(--gradient);border-radius:20px;padding:2rem;margin-bottom:2rem;position:relative;overflow:hidden;}
+        .welcome-banner::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");}
+        .wb-blob{position:absolute;border-radius:50%;filter:blur(50px);}
+        .wb-b1{width:200px;height:200px;background:var(--accent);opacity:0.15;top:-50px;right:-50px;}
+        .wb-b2{width:150px;height:150px;background:var(--gold);opacity:0.1;bottom:-30px;left:30%;}
+        .wb-inner{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
+        .wb-text h2{font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem;color:white;margin-bottom:0.3rem;}
+        .wb-text p{color:rgba(255,255,255,0.65);font-size:0.85rem;font-weight:300;}
+        .wb-actions{display:flex;gap:0.7rem;flex-wrap:wrap;}
+        .wb-btn{padding:0.6rem 1.3rem;border-radius:50px;font-size:0.82rem;font-weight:500;text-decoration:none;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all 0.2s;}
+        .wb-btn-primary{background:var(--accent);color:white;}
+        .wb-btn-primary:hover{background:#c73652;}
+        .wb-btn-outline{background:rgba(255,255,255,0.1);color:white;border:1px solid rgba(255,255,255,0.2);}
+        .wb-btn-outline:hover{background:rgba(255,255,255,0.2);}
+
+        /* STATS GRID */
+        .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem;}
+        .stat-card{background:white;border:1px solid var(--border);border-radius:16px;padding:1.2rem 1.5rem;transition:transform 0.2s,box-shadow 0.2s;}
+        .stat-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,0.07);}
+        .stat-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.8rem;}
+        .stat-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;}
+        .stat-change{font-size:0.72rem;padding:2px 8px;border-radius:50px;font-weight:600;}
+        .change-up{background:#f0fdf4;color:#15803d;}
+        .change-new{background:#fff0f3;color:var(--accent);}
+        .stat-num{font-family:'Syne',sans-serif;font-weight:800;font-size:1.8rem;color:var(--primary);line-height:1;}
+        .stat-label{font-size:0.78rem;color:var(--gray);margin-top:3px;font-weight:300;}
+
+        /* SECTION HEADER */
+        .sec-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem;flex-wrap:wrap;gap:0.5rem;}
+        .sec-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;color:var(--primary);}
+        .sec-link{font-size:0.82rem;color:var(--accent);text-decoration:none;cursor:pointer;background:none;border:none;font-family:'DM Sans',sans-serif;}
+        .sec-link:hover{text-decoration:underline;}
+
+        /* JOB CARD */
+        .job-card{background:white;border:1px solid var(--border);border-radius:14px;padding:1.2rem;margin-bottom:0.8rem;display:flex;align-items:center;gap:1rem;transition:transform 0.2s,border-color 0.2s;}
+        .job-card:hover{transform:translateX(3px);border-color:#fecdd3;}
+        .jc-logo{width:44px;height:44px;border-radius:10px;background:var(--light);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:0.78rem;color:var(--accent2);flex-shrink:0;}
+        .jc-info{flex:1;}
+        .jc-title{font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;color:var(--primary);margin-bottom:2px;}
+        .jc-company{font-size:0.78rem;color:var(--gray);margin-bottom:5px;}
+        .jc-tags{display:flex;gap:0.4rem;flex-wrap:wrap;}
+        .jc-tag{font-size:0.68rem;padding:2px 8px;border-radius:50px;font-weight:500;}
+        .t-loc{background:#eff6ff;color:#1d4ed8;}
+        .t-type{background:#f0fdf4;color:#15803d;}
+        .t-sal{background:#fff7ed;color:#c2410c;}
+        .jc-right{text-align:right;flex-shrink:0;}
+        .apply-btn{background:var(--primary);color:white;border:none;border-radius:50px;padding:0.4rem 1rem;font-size:0.75rem;font-weight:500;cursor:pointer;transition:background 0.2s;font-family:'DM Sans',sans-serif;}
+        .apply-btn:hover{background:var(--accent);}
+        .apply-btn.applied{background:#f0fdf4;color:#15803d;cursor:default;}
+
+        /* APPLICATION CARD */
+        .app-card{background:white;border:1px solid var(--border);border-radius:14px;padding:1.2rem;margin-bottom:0.8rem;}
+        .app-card-top{display:flex;align-items:center;gap:1rem;margin-bottom:0.8rem;}
+        .app-status{display:inline-flex;align-items:center;gap:5px;font-size:0.72rem;font-weight:600;padding:3px 10px;border-radius:50px;}
+        .s-applied{background:#eff6ff;color:#1d4ed8;}
+        .s-shortlisted{background:#fdf4ff;color:#7e22ce;}
+        .s-interview{background:#fff7ed;color:#c2410c;}
+        .s-selected{background:#f0fdf4;color:#15803d;}
+        .s-rejected{background:#fff0f3;color:var(--accent);}
+        .app-progress{display:flex;gap:0;margin-top:0.8rem;}
+        .prog-step-item{flex:1;text-align:center;position:relative;}
+        .prog-step-item::before{content:'';position:absolute;top:10px;left:50%;right:-50%;height:2px;background:var(--border);z-index:0;}
+        .prog-step-item:last-child::before{display:none;}
+        .prog-step-item.done::before{background:var(--accent);}
+        .psi-dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);background:white;display:flex;align-items:center;justify-content:center;font-size:0.6rem;margin:0 auto 4px;position:relative;z-index:1;transition:all 0.3s;}
+        .prog-step-item.done .psi-dot{border-color:var(--accent);background:var(--accent);color:white;}
+        .prog-step-item.active .psi-dot{border-color:var(--accent);box-shadow:0 0 0 3px rgba(233,69,96,0.15);}
+        .psi-label{font-size:0.6rem;color:var(--gray);}
+        .prog-step-item.done .psi-label{color:var(--accent);}
+
+        /* COURSE CARD */
+        .course-card{background:white;border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:0.8rem;}
+        .cc-header{padding:1rem 1.2rem 0.8rem;display:flex;align-items:center;gap:0.8rem;}
+        .cc-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+        .cc-title{font-family:'Syne',sans-serif;font-weight:700;font-size:0.88rem;color:var(--primary);}
+        .cc-sub{font-size:0.72rem;color:var(--gray);}
+        .cc-progress-bar{height:4px;background:var(--border);margin:0 1.2rem;}
+        .cc-progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 0.5s;}
+        .cc-footer{padding:0.7rem 1.2rem;display:flex;justify-content:space-between;align-items:center;font-size:0.75rem;color:var(--gray);}
+        .cc-pct{color:var(--accent);font-weight:700;}
+
+        /* PROFILE SECTION */
+        .profile-card{background:white;border:1px solid var(--border);border-radius:20px;overflow:hidden;margin-bottom:1.5rem;}
+        .profile-cover{height:100px;background:var(--gradient);position:relative;}
+        .profile-avatar-wrap{position:absolute;bottom:-30px;left:1.5rem;}
+        .profile-avatar{width:64px;height:64px;border-radius:50%;background:var(--accent);border:4px solid white;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:white;}
+        .profile-info{padding:2.5rem 1.5rem 1.5rem;}
+        .profile-name{font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;color:var(--primary);margin-bottom:2px;}
+        .profile-email{font-size:0.82rem;color:var(--gray);}
+        .profile-tags{display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.8rem;}
+        .profile-tag{font-size:0.72rem;background:var(--light);border:1px solid var(--border);color:var(--gray);padding:3px 10px;border-radius:50px;}
+        .profile-form{padding:0 1.5rem 1.5rem;}
+        .pf-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+        .pf-group{margin-bottom:1rem;}
+        .pf-label{font-size:0.72rem;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;color:var(--primary);margin-bottom:0.3rem;display:block;}
+        .pf-input{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:0.65rem 0.9rem;font-family:'DM Sans',sans-serif;font-size:0.87rem;color:var(--primary);outline:none;transition:border-color 0.2s;background:white;}
+        .pf-input:focus{border-color:var(--accent);}
+        .pf-input:disabled{background:var(--light);color:var(--gray);}
+        .save-btn{background:var(--accent);color:white;border:none;border-radius:10px;padding:0.7rem 2rem;font-family:'Syne',sans-serif;font-weight:700;font-size:0.88rem;cursor:pointer;transition:background 0.2s;}
+        .save-btn:hover{background:#c73652;}
+
+        /* EMPTY STATE */
+        .empty-state{text-align:center;padding:3rem;background:white;border:1px solid var(--border);border-radius:16px;}
+        .empty-icon{font-size:2.5rem;margin-bottom:0.8rem;}
+        .empty-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;color:var(--primary);margin-bottom:0.4rem;}
+        .empty-desc{font-size:0.82rem;color:var(--gray);margin-bottom:1rem;}
+        .empty-btn{background:var(--accent);color:white;border:none;border-radius:50px;padding:0.6rem 1.5rem;font-size:0.82rem;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.2s;}
+        .empty-btn:hover{background:#c73652;}
+
+        /* TOAST */
+        .toast{position:fixed;bottom:2rem;right:2rem;z-index:9999;padding:0.9rem 1.4rem;border-radius:12px;font-size:0.85rem;color:white;transform:translateY(80px);opacity:0;transition:transform 0.3s,opacity 0.3s;max-width:300px;font-weight:500;pointer-events:none;}
+        .toast.show{transform:translateY(0);opacity:1;}
+        .toast.success{background:#059669;}
+        .toast.error-t{background:var(--accent);}
+        .toast.info{background:var(--primary);}
+
+        /* MOBILE */
+        @media(max-width:900px){
+          .sidebar{transform:translateX(-100%);}
+          .sidebar.open{transform:translateX(0);}
+          .main{margin-left:0;}
+          .menu-toggle{display:flex;}
+          .stats-grid{grid-template-columns:1fr 1fr;}
+          .pf-grid{grid-template-columns:1fr;}
+        }
+        @media(max-width:500px){
+          .stats-grid{grid-template-columns:1fr;}
+          .content{padding:1rem;}
+        }
+    </style>
 </head>
 <body>
 
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+        <a href="../index.html" class="logo-link">Vibrant<span>Minds</span></a>
+    </div>
+
+    <div class="sidebar-user">
+        <div class="user-avatar" id="sidebarAvatar">RS</div>
+        <div>
+            <div class="user-name" id="sidebarName">Rahul Sharma</div>
+            <div class="user-role">Candidate</div>
+        </div>
+    </div>
+
+    <nav class="sidebar-nav">
+        <div class="nav-section-label">Main</div>
+        <div class="nav-item active" onclick="showPage('dashboard',this)">
+            <span class="nav-icon">🏠</span> Dashboard
+        </div>
+        <div class="nav-item" onclick="showPage('jobs',this)">
+            <span class="nav-icon">💼</span> Browse Jobs
+        </div>
+        <div class="nav-item" onclick="showPage('applications',this)">
+            <span class="nav-icon">📋</span> My Applications
+            <span class="nav-badge" id="appBadge">3</span>
+        </div>
+        <div class="nav-item" onclick="showPage('courses',this)">
+            <span class="nav-icon">📚</span> My Courses
+        </div>
+
+        <div class="nav-section-label">Account</div>
+        <div class="nav-item" onclick="showPage('profile',this)">
+            <span class="nav-icon">👤</span> My Profile
+        </div>
+        <div class="nav-item" onclick="showPage('settings',this)">
+            <span class="nav-icon">⚙️</span> Settings
+        </div>
+    </nav>
+
+    <div class="sidebar-footer">
+        <button class="logout-btn" onclick="logout()">
+            <span>🚪</span> Logout
+        </button>
+    </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+        <div class="topbar-left">
+            <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+            <div class="page-title" id="pageTitle">Dashboard</div>
+        </div>
+        <div class="topbar-right">
+            <div class="topbar-btn" onclick="showToast('No new notifications','info')">
+                🔔<div class="notif-dot"></div>
+            </div>
+            <div class="topbar-btn" onclick="window.location.href='../jobs.html'">🔍</div>
+            <div class="topbar-avatar" id="topAvatar" onclick="showPage('profile',null)">RS</div>
+        </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+        <!-- ══ DASHBOARD PAGE ══ -->
+        <div class="page-section active" id="pg-dashboard">
+
+            <div class="welcome-banner">
+                <div class="wb-blob wb-b1"></div>
+                <div class="wb-blob wb-b2"></div>
+                <div class="wb-inner">
+                    <div class="wb-text">
+                        <h2>Good morning, <span id="wbName">Rahul</span>! 👋</h2>
+                        <p>You have <strong style="color:white">3 active applications</strong> and 2 new job matches today.</p>
+                    </div>
+                    <div class="wb-actions">
+                        <button class="wb-btn wb-btn-primary" onclick="showPage('jobs',null)">Browse Jobs</button>
+                        <button class="wb-btn wb-btn-outline" onclick="showPage('applications',null)">View Applications</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STATS -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-card-top">
+                        <div class="stat-icon" style="background:#fff0f3">📋</div>
+                        <span class="stat-change change-up">+2 this week</span>
+                    </div>
+                    <div class="stat-num">3</div>
+                    <div class="stat-label">Active Applications</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-top">
+                        <div class="stat-icon" style="background:#f0fdf4">✅</div>
+                        <span class="stat-change change-up">+1</span>
+                    </div>
+                    <div class="stat-num">1</div>
+                    <div class="stat-label">Interviews Scheduled</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-top">
+                        <div class="stat-icon" style="background:#f0f9ff">📚</div>
+                        <span class="stat-change change-new">In Progress</span>
+                    </div>
+                    <div class="stat-num">1</div>
+                    <div class="stat-label">Enrolled Courses</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-top">
+                        <div class="stat-icon" style="background:#fffbeb">🏆</div>
+                        <span class="stat-change change-up">72%</span>
+                    </div>
+                    <div class="stat-num">72%</div>
+                    <div class="stat-label">Profile Completion</div>
+                </div>
+            </div>
+
+            <!-- RECENT JOBS + RECENT APPLICATIONS -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem" id="dashGrid">
+                <div>
+                    <div class="sec-header">
+                        <span class="sec-title">Recommended Jobs</span>
+                        <button class="sec-link" onclick="showPage('jobs',null)">View all →</button>
+                    </div>
+                    <div class="job-card">
+                        <div class="jc-logo">TCS</div>
+                        <div class="jc-info">
+                            <div class="jc-title">Java Full Stack Developer</div>
+                            <div class="jc-company">Tata Consultancy Services</div>
+                            <div class="jc-tags">
+                                <span class="jc-tag t-loc">📍 Pune</span>
+                                <span class="jc-tag t-type">Full Time</span>
+                                <span class="jc-tag t-sal">3.5 LPA</span>
+                            </div>
+                        </div>
+                        <div class="jc-right">
+                            <button class="apply-btn" onclick="applyJob(this,'Java Full Stack @ TCS')">Apply</button>
+                        </div>
+                    </div>
+                    <div class="job-card">
+                        <div class="jc-logo">INF</div>
+                        <div class="jc-info">
+                            <div class="jc-title">QA Test Engineer</div>
+                            <div class="jc-company">Infosys Limited</div>
+                            <div class="jc-tags">
+                                <span class="jc-tag t-loc">📍 Bangalore</span>
+                                <span class="jc-tag t-type">Full Time</span>
+                                <span class="jc-tag t-sal">4 LPA</span>
+                            </div>
+                        </div>
+                        <div class="jc-right">
+                            <button class="apply-btn" onclick="applyJob(this,'QA Engineer @ Infosys')">Apply</button>
+                        </div>
+                    </div>
+                    <div class="job-card">
+                        <div class="jc-logo">WIP</div>
+                        <div class="jc-info">
+                            <div class="jc-title">React Developer</div>
+                            <div class="jc-company">Wipro Technologies</div>
+                            <div class="jc-tags">
+                                <span class="jc-tag t-loc">📍 Hyderabad</span>
+                                <span class="jc-tag t-type">Full Time</span>
+                                <span class="jc-tag t-sal">4.5 LPA</span>
+                            </div>
+                        </div>
+                        <div class="jc-right">
+                            <button class="apply-btn" onclick="applyJob(this,'React Dev @ Wipro')">Apply</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="sec-header">
+                        <span class="sec-title">Recent Applications</span>
+                        <button class="sec-link" onclick="showPage('applications',null)">View all →</button>
+                    </div>
+                    <div class="app-card">
+                        <div class="app-card-top">
+                            <div class="jc-logo">CAP</div>
+                            <div style="flex:1">
+                                <div class="jc-title">Spring Boot Developer</div>
+                                <div class="jc-company">Capgemini India · Mumbai</div>
+                            </div>
+                            <span class="app-status s-interview">🗓 Interview</span>
+                        </div>
+                        <div class="app-progress">
+                            <div class="prog-step-item done"><div class="psi-dot">✓</div><div class="psi-label">Applied</div></div>
+                            <div class="prog-step-item done"><div class="psi-dot">✓</div><div class="psi-label">Shortlisted</div></div>
+                            <div class="prog-step-item active"><div class="psi-dot"></div><div class="psi-label">Interview</div></div>
+                            <div class="prog-step-item"><div class="psi-dot"></div><div class="psi-label">Selected</div></div>
+                        </div>
+                    </div>
+                    <div class="app-card">
+                        <div class="app-card-top">
+                            <div class="jc-logo">ZEN</div>
+                            <div style="flex:1">
+                                <div class="jc-title">Android Developer</div>
+                                <div class="jc-company">Zensar Technologies · Pune</div>
+                            </div>
+                            <span class="app-status s-shortlisted">🌟 Shortlisted</span>
+                        </div>
+                        <div class="app-progress">
+                            <div class="prog-step-item done"><div class="psi-dot">✓</div><div class="psi-label">Applied</div></div>
+                            <div class="prog-step-item active"><div class="psi-dot"></div><div class="psi-label">Shortlisted</div></div>
+                            <div class="prog-step-item"><div class="psi-dot"></div><div class="psi-label">Interview</div></div>
+                            <div class="prog-step-item"><div class="psi-dot"></div><div class="psi-label">Selected</div></div>
+                        </div>
+                    </div>
+                    <div class="app-card">
+                        <div class="app-card-top">
+                            <div class="jc-logo">PER</div>
+                            <div style="flex:1">
+                                <div class="jc-title">Python Developer Intern</div>
+                                <div class="jc-company">Persistent Systems · Pune</div>
+                            </div>
+                            <span class="app-status s-applied">📩 Applied</span>
+                        </div>
+                        <div class="app-progress">
+                            <div class="prog-step-item active"><div class="psi-dot"></div><div class="psi-label">Applied</div></div>
+                            <div class="prog-step-item"><div class="psi-dot"></div><div class="psi-label">Shortlisted</div></div>
+                            <div class="prog-step-item"><div class="psi-dot"></div><div class="psi-label">Interview</div></div>
+                            <div class="prog-step-item"><div class="psi-dot"></div><div class="psi-label">Selected</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MY COURSE PROGRESS -->
+            <div class="sec-header">
+                <span class="sec-title">Course Progress</span>
+                <button class="sec-link" onclick="showPage('courses',null)">View all →</button>
+            </div>
+            <div class="course-card">
+                <div class="cc-header">
+                    <div class="cc-icon" style="background:linear-gradient(135deg,#1a1a2e,#e94560)">☕</div>
+                    <div>
+                        <div class="cc-title">Java Full Stack Developer</div>
+                        <div class="cc-sub">Module 4 of 10 · Spring Boot &amp; REST APIs</div>
+                    </div>
+                    <div style="margin-left:auto">
+                        <span class="app-status s-applied" style="font-size:0.7rem">In Progress</span>
+                    </div>
+                </div>
+                <div class="cc-progress-bar"><div class="cc-progress-fill" style="width:42%"></div></div>
+                <div class="cc-footer">
+                    <span>42% complete</span>
+                    <span class="cc-pct">42%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══ JOBS PAGE ══ -->
+        <div class="page-section" id="pg-jobs">
+            <div class="sec-header" style="margin-bottom:1.5rem">
+                <span class="sec-title" style="font-size:1.1rem">Browse Job Listings</span>
+            </div>
+            <div style="background:white;border:1px solid var(--border);border-radius:14px;padding:1rem;margin-bottom:1rem;display:flex;gap:0.8rem;flex-wrap:wrap">
+                <input type="text" id="jobSearch" placeholder="🔍 Search jobs, skills, companies..." style="flex:1;min-width:200px;border:1.5px solid var(--border);border-radius:8px;padding:0.6rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.85rem;outline:none;" oninput="filterDashJobs()"/>
+                <select id="jobLocFilter" style="border:1.5px solid var(--border);border-radius:8px;padding:0.6rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.85rem;outline:none;" onchange="filterDashJobs()">
+                    <option value="">All Locations</option>
+                    <option>Pune</option><option>Bangalore</option><option>Mumbai</option><option>Hyderabad</option>
+                </select>
+            </div>
+            <div id="dashJobsList"></div>
+        </div>
+
+        <!-- ══ APPLICATIONS PAGE ══ -->
+        <div class="page-section" id="pg-applications">
+            <div class="sec-header" style="margin-bottom:1.5rem">
+                <span class="sec-title" style="font-size:1.1rem">My Applications</span>
+                <span style="font-size:0.82rem;color:var(--gray)">Total: 3 applications</span>
+            </div>
+            <div class="app-card">
+                <div class="app-card-top">
+                    <div class="jc-logo">CAP</div>
+                    <div style="flex:1">
+                        <div class="jc-title">Spring Boot Developer</div>
+                        <div class="jc-company">Capgemini India · Mumbai · Applied 3 days ago</div>
+                    </div>
+                    <span class="app-status s-interview">🗓 Interview Scheduled</span>
+                </div>
+                <div class="app-progress">
+                    <div class="prog-step-item done"><div class="psi-dot">✓</div><div class="psi-label">Applied</div></div>
+                    <div class="prog-step-item done"><div class="psi-dot">✓</div><div class="psi-label">Shortlisted</div></div>
+                    <div class="prog-step-item active"><div class="psi-dot"></div><div class="psi-label">Interview</div></div>
+                    <div class="prog-step-item"><div class="psi-dot"></div><div class="psi-label">Selected</div></div>
+                </div>
+            </div>
+            <div class="app-card">
+                <div class="app-card-top">
+                    <div class="jc-logo">ZEN</div>
+                    <div style="flex:1">
+                        <div class="jc-title">Android Developer</div>
+                        <div class="jc-company">Zensar Technologies · Pune · Applied 5 days ago</div>
+                    </div>
+                    <span class="app-status s-shortlisted">🌟 Shortlisted</span>
+                </div>
+                <div class="app-progress">
+                    <div class="prog-step-item done"><div class="psi-dot">✓</div><div class="psi-label">Applied</div></div>
+                    <div class="prog-step-item active"><div class="psi-dot"></div><div class="psi-label">Shortlisted</div></div>
+                    <div class="prog-step-item"><div class="psi-dot"></div><div class="psi-label">Interview</div></div>
+                    <div class="prog-step-item"><div class="psi-dot"></div><div class="psi-label">Selected</div></div>
+                </div>
+            </div>
+            <div class="app-card">
+                <div class="app-card-top">
+                    <div class="jc-logo">PER</div>
+                    <div style="flex:1">
+                        <div class="jc-title">Python Developer Intern</div>
+                        <div class="jc-company">Persistent Systems · Pune · Applied Today</div>
+                    </div>
+                    <span class="app-status s-applied">📩 Applied</span>
+                </div>
+                <div class="app-progress">
+                    <div class="prog-step-item active"><div class="psi-dot"></div><div class="psi-label">Applied</div></div>
+                    <div class="prog-step-item"><div class="psi-dot"></div><div class="psi-label">Shortlisted</div></div>
+                    <div class="prog-step-item"><div class="psi-dot"></div><div class="psi-label">Interview</div></div>
+                    <div class="prog-step-item"><div class="psi-dot"></div><div class="psi-label">Selected</div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══ COURSES PAGE ══ -->
+        <div class="page-section" id="pg-courses">
+            <div class="sec-header" style="margin-bottom:1.5rem">
+                <span class="sec-title" style="font-size:1.1rem">My Courses</span>
+                <a href="../courses.html" class="sec-link">Browse more courses →</a>
+            </div>
+            <div class="course-card">
+                <div class="cc-header">
+                    <div class="cc-icon" style="background:linear-gradient(135deg,#1a1a2e,#e94560)">☕</div>
+                    <div style="flex:1">
+                        <div class="cc-title">Java Full Stack Developer</div>
+                        <div class="cc-sub">Module 4 of 10 · Spring Boot &amp; REST APIs</div>
+                    </div>
+                    <span class="app-status s-applied">In Progress</span>
+                </div>
+                <div class="cc-progress-bar"><div class="cc-progress-fill" style="width:42%"></div></div>
+                <div class="cc-footer">
+                    <span>Next: Hibernate &amp; JPA</span>
+                    <span class="cc-pct">42% complete</span>
+                </div>
+            </div>
+            <div class="empty-state">
+                <div class="empty-icon">📚</div>
+                <div class="empty-title">Explore More Courses</div>
+                <div class="empty-desc">Enroll in additional courses to boost your skills and career prospects.</div>
+                <button class="empty-btn" onclick="window.location.href='../courses.html'">Browse Courses</button>
+            </div>
+        </div>
+
+        <!-- ══ PROFILE PAGE ══ -->
+        <div class="page-section" id="pg-profile">
+            <div class="profile-card">
+                <div class="profile-cover"></div>
+                <div class="profile-avatar-wrap">
+                    <div class="profile-avatar" id="profileAvatar">RS</div>
+                </div>
+                <div class="profile-info">
+                    <div class="profile-name" id="profileName">Rahul Sharma</div>
+                    <div class="profile-email" id="profileEmail">rahul@gmail.com</div>
+                    <div class="profile-tags">
+                        <span class="profile-tag">Java Developer</span>
+                        <span class="profile-tag">Fresher</span>
+                        <span class="profile-tag">Pune</span>
+                    </div>
+                </div>
+                <div class="profile-form">
+                    <div class="pf-grid">
+                        <div class="pf-group">
+                            <label class="pf-label">First Name</label>
+                            <input class="pf-input" id="pfFname" type="text" placeholder="First Name"/>
+                        </div>
+                        <div class="pf-group">
+                            <label class="pf-label">Last Name</label>
+                            <input class="pf-input" id="pfLname" type="text" placeholder="Last Name"/>
+                        </div>
+                        <div class="pf-group">
+                            <label class="pf-label">Email</label>
+                            <input class="pf-input" id="pfEmail" type="email" disabled/>
+                        </div>
+                        <div class="pf-group">
+                            <label class="pf-label">Phone</label>
+                            <input class="pf-input" id="pfPhone" type="tel" placeholder="+91 98765 43210"/>
+                        </div>
+                        <div class="pf-group">
+                            <label class="pf-label">City</label>
+                            <input class="pf-input" id="pfCity" type="text" placeholder="Pune"/>
+                        </div>
+                        <div class="pf-group">
+                            <label class="pf-label">Qualification</label>
+                            <input class="pf-input" id="pfQual" type="text" placeholder="B.E / B.Tech"/>
+                        </div>
+                        <div class="pf-group">
+                            <label class="pf-label">Experience</label>
+                            <input class="pf-input" id="pfExp" type="text" placeholder="Fresher"/>
+                        </div>
+                        <div class="pf-group">
+                            <label class="pf-label">Skills</label>
+                            <input class="pf-input" id="pfSkills" type="text" placeholder="Java, Spring Boot, React"/>
+                        </div>
+                    </div>
+                    <button class="save-btn" onclick="saveProfile()">Save Changes</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══ SETTINGS PAGE ══ -->
+        <div class="page-section" id="pg-settings">
+            <div style="background:white;border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1rem;">
+                <div class="sec-title" style="margin-bottom:1rem">Notification Preferences</div>
+                <div style="display:flex;flex-direction:column;gap:0.8rem">
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0;border-bottom:1px solid var(--border)">
+                        <div><div style="font-size:0.88rem;font-weight:500">Job Application Updates</div><div style="font-size:0.75rem;color:var(--gray)">Get notified when your application status changes</div></div>
+                        <input type="checkbox" checked style="accent-color:var(--accent);width:16px;height:16px;cursor:pointer"/>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0;border-bottom:1px solid var(--border)">
+                        <div><div style="font-size:0.88rem;font-weight:500">New Job Recommendations</div><div style="font-size:0.75rem;color:var(--gray)">Receive daily job match notifications</div></div>
+                        <input type="checkbox" checked style="accent-color:var(--accent);width:16px;height:16px;cursor:pointer"/>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0">
+                        <div><div style="font-size:0.88rem;font-weight:500">Course & Placement Updates</div><div style="font-size:0.75rem;color:var(--gray)">News about placement drives and new courses</div></div>
+                        <input type="checkbox" checked style="accent-color:var(--accent);width:16px;height:16px;cursor:pointer"/>
+                    </div>
+                </div>
+            </div>
+            <div style="background:white;border:1px solid var(--border);border-radius:16px;padding:1.5rem">
+                <div class="sec-title" style="margin-bottom:1rem">Account Actions</div>
+                <button onclick="logout()" style="display:flex;align-items:center;gap:8px;background:#fff0f3;color:var(--accent);border:1px solid #fecdd3;border-radius:10px;padding:0.7rem 1.5rem;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:500">🚪 Logout from Account</button>
+            </div>
+        </div>
+
+    </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+    'use strict';
+
+    /* ── SAMPLE JOBS DATA ── */
+    var dashJobs = [
+      {id:1,title:'Java Full Stack Developer',company:'TCS',loc:'Pune',type:'Full Time',sal:'3.5 LPA'},
+      {id:2,title:'QA Test Engineer',company:'Infosys',loc:'Bangalore',type:'Full Time',sal:'4 LPA'},
+      {id:3,title:'React Developer',company:'Wipro',loc:'Hyderabad',type:'Full Time',sal:'4.5 LPA'},
+      {id:4,title:'Spring Boot Developer',company:'Capgemini',loc:'Mumbai',type:'Full Time',sal:'5 LPA'},
+      {id:5,title:'Python Intern',company:'Persistent',loc:'Pune',type:'Internship',sal:'₹15k/mo'},
+      {id:6,title:'Android Developer',company:'Zensar',loc:'Pune',type:'Full Time',sal:'6 LPA'},
+    ];
+
+    /* ── INIT ── */
+    window.addEventListener('DOMContentLoaded', function() {
+      var email = localStorage.getItem('vm_email') || 'candidate@demo.com';
+      var name  = localStorage.getItem('vm_name')  || deriveNameFromEmail(email);
+
+      setUserUI(name, email);
+      renderDashJobs(dashJobs);
+
+      // Load from API if available
+      loadFromAPI(email);
+    });
+
+    function deriveNameFromEmail(email) {
+      var local = email.split('@')[0];
+      return local.charAt(0).toUpperCase() + local.slice(1).replace(/[._]/g,' ');
+    }
+
+    function setUserUI(name, email) {
+      var initials = name.split(' ').map(function(p){return p[0];}).join('').slice(0,2).toUpperCase();
+      ['sidebarAvatar','topAvatar','profileAvatar'].forEach(function(id){
+        var el = document.getElementById(id);
+        if(el) el.textContent = initials;
+      });
+      var sn = document.getElementById('sidebarName');
+      if(sn) sn.textContent = name;
+      var wbn = document.getElementById('wbName');
+      if(wbn) wbn.textContent = name.split(' ')[0];
+      var pn = document.getElementById('profileName');
+      if(pn) pn.textContent = name;
+      var pe = document.getElementById('profileEmail');
+      if(pe) pe.textContent = email;
+      var pfEmail = document.getElementById('pfEmail');
+      if(pfEmail) pfEmail.value = email;
+      var parts = name.split(' ');
+      var pfFname = document.getElementById('pfFname');
+      var pfLname = document.getElementById('pfLname');
+      if(pfFname) pfFname.value = parts[0] || '';
+      if(pfLname) pfLname.value = parts.slice(1).join(' ') || '';
+    }
+
+    /* ── LOAD FROM API ── */
+   async function loadProfile() {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  try {
+    const res = await fetch("http://localhost:8080/api/candidate/profile", {
+      method: "GET",
+      headers: {
+        "Authorization": "Bearer " + token
+      }
+    });
+
+    const data = await res.json();
+
+    if (res.ok && data.success) {
+      const user = data.data;
+
+      localStorage.setItem("userEmail", user.email);
+
+      setUserUI(user);
+
+    } else {
+      logout();
+    }
+
+  } catch (err) {
+    console.error(err);
+    showToast("Backend connection failed", "error-t");
+  }
+}
+
+
+    /* ── PAGE SWITCHING ── */
+    function showPage(name, navEl) {
+      document.querySelectorAll('.page-section').forEach(function(el){
+        el.classList.remove('active');
+      });
+      document.getElementById('pg-' + name).classList.add('active');
+
+      document.querySelectorAll('.nav-item').forEach(function(el){
+        el.classList.remove('active');
+      });
+      if(navEl) navEl.classList.add('active');
+
+      var titles = {
+        dashboard:'Dashboard', jobs:'Browse Jobs',
+        applications:'My Applications', courses:'My Courses',
+        profile:'My Profile', settings:'Settings'
+      };
+      document.getElementById('pageTitle').textContent = titles[name] || name;
+
+      // close sidebar on mobile
+      if(window.innerWidth <= 900) {
+        document.getElementById('sidebar').classList.remove('open');
+      }
+    }
+
+    /* ── SIDEBAR MOBILE TOGGLE ── */
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+    }
+
+    /* ── RENDER JOBS ── */
+    function renderDashJobs(list) {
+      var container = document.getElementById('dashJobsList');
+      if(!container) return;
+      if(!list.length){
+        container.innerHTML = '<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-title">No jobs found</div><div class="empty-desc">Try a different search.</div></div>';
+        return;
+      }
+      container.innerHTML = list.map(function(j){
+        return '<div class="job-card">' +
+          '<div class="jc-logo">' + j.company.slice(0,3).toUpperCase() + '</div>' +
+          '<div class="jc-info">' +
+            '<div class="jc-title">' + j.title + '</div>' +
+            '<div class="jc-company">' + j.company + '</div>' +
+            '<div class="jc-tags">' +
+              '<span class="jc-tag t-loc">📍 ' + j.loc + '</span>' +
+              '<span class="jc-tag t-type">' + j.type + '</span>' +
+              '<span class="jc-tag t-sal">' + j.sal + '</span>' +
+            '</div>' +
+          '</div>' +
+          '<div class="jc-right">' +
+            '<button class="apply-btn" onclick="applyJob(this,\'' + j.title + ' @ ' + j.company + '\')">Apply</button>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    /* ── FILTER JOBS ── */
+    function filterDashJobs() {
+      var q   = document.getElementById('jobSearch').value.toLowerCase();
+      var loc = document.getElementById('jobLocFilter').value;
+      var filtered = dashJobs.filter(function(j){
+        var matchQ   = !q   || j.title.toLowerCase().includes(q) || j.company.toLowerCase().includes(q);
+        var matchLoc = !loc || j.loc === loc;
+        return matchQ && matchLoc;
+      });
+      renderDashJobs(filtered);
+    }
+
+    /* ── APPLY JOB ── */
+    function applyJob(btn, jobName) {
+      var token = localStorage.getItem('vm_token');
+      if(!token){ showToast('Please login to apply','error-t'); return; }
+      btn.textContent = 'Applied ✓';
+      btn.classList.add('applied');
+      btn.disabled = true;
+      showToast('Applied for ' + jobName + ' ✓','success');
+    }
+
+    /* ── SAVE PROFILE ── */
+    async function saveProfile() {
+  const token = localStorage.getItem("token");
+
+  const fname = document.getElementById("pfFname").value.trim();
+  const lname = document.getElementById("pfLname").value.trim();
+
+  const payload = {
+    name: fname + " " + lname,
+    mobile: document.getElementById("pfPhone").value,
+    currentCity: document.getElementById("pfCity").value,
+    qualification: document.getElementById("pfQual").value,
+    experience: document.getElementById("pfExp").value,
+    skills: document.getElementById("pfSkills").value
+  };
+
+  try {
+    const res = await fetch("http://localhost:8080/api/candidate/profile", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      showToast("Profile updated successfully", "success");
+      loadProfile();
+    } else {
+      showToast("Update failed", "error-t");
+    }
+
+  } catch (err) {
+    console.error(err);
+    showToast("Error updating profile", "error-t");
+  }
+}
+
+    /* ── LOGOUT ── */
+    function logout() {
+      localStorage.removeItem('vm_token');
+      localStorage.removeItem('vm_role');
+      localStorage.removeItem('vm_email');
+      localStorage.removeItem('vm_name');
+      window.location.href = '../login.html';
+    }
+
+    /* ── TOAST ── */
+    function showToast(msg, type) {
+      var t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = 'toast show ' + (type || 'info');
+      clearTimeout(t._timer);
+      t._timer = setTimeout(function(){ t.className = 'toast'; }, 3000);
+    }
+
+    /* ── AUTH GUARD ── */
+    (function(){
+      var token = localStorage.getItem('vm_token');
+      var role  = localStorage.getItem('vm_role');
+      if(!token){
+        window.location.href = '../login.html';
+      } else if(role === 'admin'){
+        window.location.href = '../admin/dashboard.html';
+      }
+    }());
+</script>
 </body>
 </html>

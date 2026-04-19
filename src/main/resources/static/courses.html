@@ -1,10 +1,726 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Courses – VibrantMinds Technologies</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet"/>
+    <style>
+        :root {
+          --primary: #1a1a2e;
+          --accent: #e94560;
+          --accent2: #0f3460;
+          --gold: #f5a623;
+          --light: #f8f9ff;
+          --white: #ffffff;
+          --gray: #6b7280;
+          --border: #e5e7eb;
+          --gradient: linear-gradient(135deg, #1a1a2e 0%, #0f3460 50%, #16213e 100%);
+          --card-shadow: 0 4px 24px rgba(0,0,0,0.07);
+          --hover-shadow: 0 16px 48px rgba(233,69,96,0.13);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'DM Sans', sans-serif; color: var(--primary); background: var(--light); overflow-x: hidden; }
+
+        /* ── NAV ── */
+        nav {
+          position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+          background: rgba(26,26,46,0.97); backdrop-filter: blur(12px);
+          border-bottom: 1px solid rgba(255,255,255,0.08);
+          padding: 0 5%; height: 70px;
+          display: flex; align-items: center; justify-content: space-between;
+        }
+        .nav-logo { font-family: 'Syne',sans-serif; font-weight: 800; font-size: 1.5rem; color: white; text-decoration: none; letter-spacing: -0.5px; }
+        .nav-logo span { color: var(--accent); }
+        .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
+        .nav-links a { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+        .nav-links a:hover, .nav-links a.active { color: white; }
+        .nav-cta { background: var(--accent); color: white !important; padding: 0.5rem 1.25rem; border-radius: 50px; font-weight: 500 !important; }
+        .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+        .hamburger span { width: 24px; height: 2px; background: white; border-radius: 2px; }
+
+        /* ── PAGE HERO ── */
+        .page-hero {
+          background: var(--gradient);
+          padding: 120px 5% 80px;
+          position: relative; overflow: hidden;
+          text-align: center;
+        }
+        .page-hero::before {
+          content:''; position:absolute; inset:0;
+          background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        .blob { position:absolute; border-radius:50%; filter:blur(80px); opacity:0.12; }
+        .b1 { width:400px; height:400px; background:var(--accent); top:-80px; right:-80px; }
+        .b2 { width:300px; height:300px; background:var(--gold); bottom:-60px; left:5%; }
+        .b3 { width:200px; height:200px; background:#4f46e5; top:30%; left:30%; }
+        .hero-inner { position:relative; z-index:1; }
+        .breadcrumb { display:flex; align-items:center; gap:8px; justify-content:center; margin-bottom:1.2rem; }
+        .breadcrumb a { color:rgba(255,255,255,0.5); text-decoration:none; font-size:0.82rem; }
+        .breadcrumb span { color:rgba(255,255,255,0.3); font-size:0.82rem; }
+        .breadcrumb .cur { color:rgba(255,255,255,0.8); font-size:0.82rem; }
+        .page-hero h2 { font-family:'Syne',sans-serif; font-size:clamp(2rem,5vw,3.5rem); font-weight:750; color:white; letter-spacing:-1px; line-height:1.1; margin-bottom:1rem; }
+        .page-hero h2 em { color:var(--accent); font-style:normal; }
+        .page-hero p { color:rgba(255,255,255,0.65); font-size:1rem; max-width:520px; margin:0 auto 2rem; line-height:1.7; font-weight:300; }
+
+        /* ── FILTER TABS ── */
+        .filter-tabs {
+          background: white;
+          border-bottom: 1px solid var(--border);
+          position: sticky; top: 70px; z-index: 100;
+          padding: 0 5%;
+          display: flex; align-items: center; justify-content: space-between;
+          gap: 1rem; flex-wrap: wrap;
+        }
+        .tabs-row { display:flex; gap:0; overflow-x:auto; }
+        .tab-btn {
+          padding: 1rem 1.4rem;
+          border: none; background: none;
+          font-family:'DM Sans',sans-serif; font-size:0.88rem;
+          color: var(--gray); cursor:pointer;
+          border-bottom: 3px solid transparent;
+          transition: color 0.2s, border-color 0.2s;
+          white-space: nowrap;
+        }
+        .tab-btn:hover { color:var(--primary); }
+        .tab-btn.active { color:var(--accent); border-bottom-color:var(--accent); font-weight:500; }
+        .filter-right { display:flex; gap:0.6rem; align-items:center; padding: 0.6rem 0; }
+        .filter-select {
+          border:1.5px solid var(--border); border-radius:8px;
+          padding:0.4rem 0.8rem; font-family:'DM Sans',sans-serif;
+          font-size:0.82rem; color:var(--primary); outline:none; cursor:pointer;
+          background: white;
+        }
+        .search-input {
+          border:1.5px solid var(--border); border-radius:8px;
+          padding:0.4rem 0.9rem; font-family:'DM Sans',sans-serif;
+          font-size:0.82rem; color:var(--primary); outline:none;
+          background: white; width:200px;
+        }
+        .search-input:focus { border-color:var(--accent); }
+
+        /* ── COURSES GRID ── */
+        .courses-section { padding:3rem 5%; max-width:1300px; margin:0 auto; }
+        .courses-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(340px,1fr)); gap:1.8rem; }
+
+        /* ── COURSE CARD ── */
+        .course-card {
+          background: white;
+          border-radius: 20px;
+          border: 1.5px solid var(--border);
+          overflow: hidden;
+          transition: transform 0.3s, box-shadow 0.3s;
+          display: flex; flex-direction: column;
+          position: relative;
+        }
+        .course-card:hover { transform:translateY(-8px); box-shadow:var(--hover-shadow); }
+        .course-card.popular { border-color: var(--gold); }
+        .card-banner {
+          height: 180px;
+          position: relative; overflow: hidden;
+          display: flex; align-items: center; justify-content: center;
+        }
+        .banner-icon { font-size: 4rem; position: relative; z-index: 1; }
+        .banner-pattern {
+          position: absolute; inset: 0;
+          opacity: 0.07;
+          background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M20 0L40 20L20 40L0 20z'/%3E%3C/g%3E%3C/svg%3E");
+        }
+        .card-badges {
+          position: absolute; top:1rem; left:1rem;
+          display: flex; gap:0.4rem; flex-wrap:wrap;
+        }
+        .card-badge {
+          font-size:0.68rem; font-weight:700; letter-spacing:0.5px;
+          padding:3px 10px; border-radius:50px;
+          text-transform: uppercase;
+        }
+        .badge-hot { background:var(--accent); color:white; }
+        .badge-new { background:#059669; color:white; }
+        .badge-popular { background:var(--gold); color:white; }
+        .badge-free { background:#4f46e5; color:white; }
+        .card-body { padding:1.5rem; flex:1; }
+        .course-category {
+          font-size:0.72rem; font-weight:600; letter-spacing:1px;
+          text-transform:uppercase; color:var(--gray);
+          margin-bottom:0.5rem;
+        }
+        .course-title {
+          font-family:'Syne',sans-serif; font-weight:800;
+          font-size:1.1rem; color:var(--primary);
+          line-height:1.3; margin-bottom:0.6rem;
+        }
+        .course-desc {
+          font-size:0.84rem; color:var(--gray); line-height:1.7;
+          font-weight:300; margin-bottom:1rem;
+          display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+        }
+        .course-highlights { display:flex; flex-direction:column; gap:0.4rem; margin-bottom:1rem; }
+        .highlight { display:flex; align-items:center; gap:8px; font-size:0.8rem; color:var(--gray); }
+        .highlight-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+        .card-meta { display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.6rem; margin-bottom:1rem; padding:0.8rem; background:var(--light); border-radius:10px; }
+        .meta-item { text-align:center; }
+        .meta-val { font-family:'Syne',sans-serif; font-weight:700; font-size:0.9rem; color:var(--primary); }
+        .meta-label { font-size:0.68rem; color:var(--gray); text-transform:uppercase; letter-spacing:0.5px; }
+        .skills-wrap { display:flex; gap:0.4rem; flex-wrap:wrap; margin-bottom:1rem; }
+        .skill-chip { font-size:0.72rem; background:#f1f5f9; color:#475569; padding:3px 10px; border-radius:50px; }
+        .card-footer {
+          padding:1.2rem 1.5rem;
+          border-top:1px solid var(--border);
+          display:flex; align-items:center; justify-content:space-between;
+          gap:0.8rem;
+        }
+        .price-wrap { }
+        .price { font-family:'Syne',sans-serif; font-weight:800; font-size:1.3rem; color:var(--primary); }
+        .price-old { font-size:0.82rem; color:var(--gray); text-decoration:line-through; margin-left:6px; }
+        .price-note { font-size:0.72rem; color:var(--gray); }
+        .enroll-btn {
+          background:var(--accent); color:white;
+          border:none; border-radius:50px;
+          padding:0.6rem 1.4rem;
+          font-family:'DM Sans',sans-serif; font-weight:500;
+          font-size:0.85rem; cursor:pointer;
+          transition:background 0.2s, transform 0.2s;
+          text-decoration: none;
+          display: inline-block;
+        }
+        .enroll-btn:hover { background:#c73652; transform:translateY(-1px); }
+        .demo-btn {
+          background:transparent; color:var(--primary);
+          border:1.5px solid var(--border); border-radius:50px;
+          padding:0.6rem 1.2rem;
+          font-family:'DM Sans',sans-serif; font-weight:400;
+          font-size:0.82rem; cursor:pointer;
+          transition:border-color 0.2s, background 0.2s;
+        }
+        .demo-btn:hover { border-color:var(--primary); background:var(--light); }
+
+        /* ── COURSE MODAL ── */
+        .modal-overlay {
+          position:fixed; inset:0; z-index:2000;
+          background:rgba(0,0,0,0.55); backdrop-filter:blur(6px);
+          display:none; align-items:center; justify-content:center; padding:1rem;
+        }
+        .modal-overlay.open { display:flex; }
+        .modal {
+          background:white; border-radius:24px;
+          max-width:720px; width:100%; max-height:92vh;
+          overflow-y:auto; position:relative;
+          animation:slideUp 0.3s ease;
+        }
+        @keyframes slideUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+        .modal-hero {
+          height:200px; position:relative;
+          display:flex; align-items:center; justify-content:center;
+          border-radius:24px 24px 0 0; overflow:hidden;
+        }
+        .modal-hero-icon { font-size:5rem; position:relative; z-index:1; }
+        .modal-close {
+          position:absolute; top:1.2rem; right:1.2rem;
+          width:36px; height:36px; background:rgba(255,255,255,0.2);
+          border:none; border-radius:50%; cursor:pointer;
+          color:white; font-size:1.1rem;
+          display:flex; align-items:center; justify-content:center;
+          transition:background 0.2s; z-index:2;
+        }
+        .modal-close:hover { background:rgba(255,255,255,0.35); }
+        .modal-content { padding:2rem; }
+        .modal-title { font-family:'Syne',sans-serif; font-weight:800; font-size:1.5rem; color:var(--primary); margin-bottom:0.4rem; }
+        .modal-sub { color:var(--gray); font-size:0.9rem; margin-bottom:1.5rem; }
+        .modal-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:0.8rem; margin-bottom:1.5rem; }
+        .modal-stat { background:var(--light); border-radius:10px; padding:0.8rem; text-align:center; }
+        .modal-stat-val { font-family:'Syne',sans-serif; font-weight:800; font-size:1rem; color:var(--primary); }
+        .modal-stat-label { font-size:0.68rem; color:var(--gray); text-transform:uppercase; letter-spacing:0.5px; }
+        .modal-section { margin-bottom:1.5rem; }
+        .modal-section h4 { font-family:'Syne',sans-serif; font-weight:700; font-size:0.95rem; color:var(--primary); margin-bottom:0.8rem; padding-bottom:0.5rem; border-bottom:1px solid var(--border); }
+        .modal-section p { font-size:0.88rem; color:var(--gray); line-height:1.8; font-weight:300; }
+        .syllabus-list { list-style:none; }
+        .syllabus-item {
+          display:flex; align-items:center; gap:10px;
+          padding:0.5rem 0; font-size:0.85rem; color:var(--gray);
+          border-bottom:1px solid var(--border);
+        }
+        .syllabus-item:last-child { border-bottom:none; }
+        .syl-num { width:24px; height:24px; border-radius:50%; background:var(--light); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:0.7rem; font-weight:700; color:var(--accent); flex-shrink:0; }
+        .modal-skills { display:flex; gap:0.5rem; flex-wrap:wrap; }
+        .modal-skill { background:#fff7ed; color:#c2410c; border:1px solid #fed7aa; font-size:0.78rem; padding:4px 12px; border-radius:50px; }
+        .modal-footer { padding:1.2rem 2rem 2rem; display:flex; gap:1rem; align-items:center; flex-wrap:wrap; }
+        .modal-price { font-family:'Syne',sans-serif; font-weight:800; font-size:1.8rem; color:var(--primary); }
+        .modal-enroll { flex:1; background:var(--accent); color:white; border:none; border-radius:12px; padding:0.9rem; font-family:'Syne',sans-serif; font-weight:700; font-size:1rem; cursor:pointer; transition:background 0.2s; }
+        .modal-enroll:hover { background:#c73652; }
+        .modal-demo { background:var(--light); color:var(--primary); border:1.5px solid var(--border); border-radius:12px; padding:0.9rem 1.5rem; font-family:'DM Sans',sans-serif; font-weight:400; font-size:0.9rem; cursor:pointer; transition:border-color 0.2s; }
+        .modal-demo:hover { border-color:var(--primary); }
+
+        /* ── WHY SECTION ── */
+        .why-section { background:var(--gradient); padding:5rem 5%; position:relative; overflow:hidden; }
+        .why-section::before { content:''; position:absolute; inset:0; background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
+        .why-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1.5rem; position:relative; z-index:1; }
+        .why-item {
+          background:rgba(255,255,255,0.07);
+          border:1px solid rgba(255,255,255,0.1);
+          border-radius:16px; padding:1.5rem;
+          text-align:center;
+          transition:background 0.2s, transform 0.2s;
+        }
+        .why-item:hover { background:rgba(255,255,255,0.12); transform:translateY(-4px); }
+        .why-icon { font-size:2rem; margin-bottom:0.8rem; }
+        .why-item h3 { font-family:'Syne',sans-serif; font-weight:700; font-size:0.95rem; color:white; margin-bottom:0.4rem; }
+        .why-item p { font-size:0.8rem; color:rgba(255,255,255,0.55); line-height:1.6; font-weight:300; }
+        .why-header { text-align:center; margin-bottom:3rem; position:relative; z-index:1; }
+        .why-label { display:inline-block; font-size:0.72rem; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:var(--accent); margin-bottom:0.6rem; }
+        .why-title { font-family:'Syne',sans-serif; font-size:clamp(1.6rem,3.5vw,2.4rem); font-weight:800; color:white; letter-spacing:-0.5px; }
+
+        /* ── PROCESS SECTION ── */
+        .process-section { padding:5rem 5%; background:white; }
+        .process-header { text-align:center; margin-bottom:3rem; }
+        .section-label { display:inline-block; font-size:0.72rem; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:var(--accent); margin-bottom:0.6rem; }
+        .section-title { font-family:'Syne',sans-serif; font-size:clamp(1.6rem,3.5vw,2.4rem); font-weight:800; color:var(--primary); letter-spacing:-0.5px; }
+        .process-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:2rem; position:relative; }
+        .process-line {
+          position:absolute; top:40px; left:10%; right:10%; height:2px;
+          background:linear-gradient(to right, var(--accent), var(--gold));
+          z-index:0;
+        }
+        .process-step { text-align:center; position:relative; z-index:1; }
+        .step-num {
+          width:64px; height:64px; border-radius:50%;
+          background:white; border:3px solid var(--accent);
+          display:flex; align-items:center; justify-content:center;
+          font-family:'Syne',sans-serif; font-weight:800; font-size:1.2rem;
+          color:var(--accent); margin:0 auto 1rem;
+          position:relative; z-index:1;
+          box-shadow: 0 0 0 6px white;
+        }
+        .step-icon { font-size:1.4rem; }
+        .process-step h3 { font-family:'Syne',sans-serif; font-weight:700; font-size:0.95rem; color:var(--primary); margin-bottom:0.4rem; }
+        .process-step p { font-size:0.8rem; color:var(--gray); line-height:1.6; font-weight:300; }
+
+        /* ── CTA ── */
+        .cta-section { background:var(--accent); padding:4rem 5%; text-align:center; position:relative; overflow:hidden; }
+        .cta-section::before { content:''; position:absolute; width:400px; height:400px; background:rgba(255,255,255,0.08); border-radius:50%; top:-100px; left:-100px; }
+        .cta-section::after { content:''; position:absolute; width:300px; height:300px; background:rgba(255,255,255,0.06); border-radius:50%; bottom:-80px; right:-80px; }
+        .cta-section h2 { font-family:'Syne',sans-serif; font-size:clamp(1.6rem,3.5vw,2.4rem); font-weight:800; color:white; margin-bottom:0.8rem; letter-spacing:-0.5px; position:relative; z-index:1; }
+        .cta-section p { color:rgba(255,255,255,0.8); font-size:1rem; max-width:480px; margin:0 auto 2rem; line-height:1.7; position:relative; z-index:1; }
+        .cta-btns { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; position:relative; z-index:1; }
+        .btn-white { background:white; color:var(--accent); padding:0.85rem 2rem; border-radius:50px; font-weight:600; text-decoration:none; font-size:0.9rem; transition:transform 0.2s, box-shadow 0.2s; display:inline-block; }
+        .btn-white:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,0.15); }
+        .btn-ghost { border:2px solid rgba(255,255,255,0.5); color:white; padding:0.85rem 2rem; border-radius:50px; font-weight:400; text-decoration:none; font-size:0.9rem; transition:border-color 0.2s, background 0.2s; display:inline-block; }
+        .btn-ghost:hover { border-color:white; background:rgba(255,255,255,0.1); }
+
+        /* ── FOOTER ── */
+        footer { background:var(--primary); color:rgba(255,255,255,0.6); padding:2rem 5%; }
+        .footer-bottom { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; font-size:0.8rem; }
+        .footer-links-row { display:flex; gap:1.5rem; }
+        .footer-links-row a { color:rgba(255,255,255,0.5); text-decoration:none; font-size:0.8rem; transition:color 0.2s; }
+        .footer-links-row a:hover { color:white; }
+
+        /* ── TOAST ── */
+        .toast { position:fixed; bottom:2rem; right:2rem; z-index:9999; background:var(--primary); color:white; padding:0.8rem 1.5rem; border-radius:12px; font-size:0.85rem; transform:translateY(100px); opacity:0; transition:transform 0.3s, opacity 0.3s; }
+        .toast.show { transform:translateY(0); opacity:1; }
+        .toast.success { background:#059669; }
+
+        /* ── REVEAL ── */
+        .reveal { opacity:0; transform:translateY(20px); transition:opacity 0.5s ease, transform 0.5s ease; }
+        .reveal.visible { opacity:1; transform:translateY(0); }
+        .reveal-delay-1 { transition-delay:0.1s; }
+        .reveal-delay-2 { transition-delay:0.2s; }
+        .reveal-delay-3 { transition-delay:0.3s; }
+
+        /* ── MOBILE ── */
+        @media(max-width:768px) {
+          .nav-links { display:none; }
+          .nav-links.open { display:flex; flex-direction:column; position:absolute; top:70px; left:0; right:0; background:var(--primary); padding:1.5rem 5%; gap:1rem; }
+          .hamburger { display:flex; }
+          .courses-grid { grid-template-columns:1fr; }
+          .modal-stats { grid-template-columns:1fr 1fr; }
+          .process-line { display:none; }
+          .filter-tabs { flex-direction:column; align-items:flex-start; padding:0.5rem 5%; }
+          .tabs-row { width:100%; }
+        }
+    </style>
 </head>
 <body>
 
+<!-- NAVBAR -->
+<nav>
+    <a href="index.html" class="nav-logo">Vibrant<span>Minds</span></a>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="jobs.html">Jobs</a></li>
+        <li><a href="courses.html" class="active">Courses</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="login.html">Login</a></li>
+        <li><a href="register.html" class="nav-cta">Register Free</a></li>
+    </ul>
+    <div class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="blob b3"></div>
+    <div class="hero-inner">
+        <div class="breadcrumb">
+            <a href="index.html">Home</a><span>›</span><span class="cur">Courses</span>
+        </div>
+        <h2>Master the Skills That<br><em>Companies Are Hiring For</em></h2>
+        <p>Industry-designed courses with real projects, expert mentors, and guaranteed placement support. Your dream IT job starts here.</p>
+    </div>
+</div>
+
+<!-- FILTER TABS -->
+<div class="filter-tabs">
+    <div class="tabs-row">
+        <button class="tab-btn active" onclick="filterTab(this,'all')">All Courses</button>
+        <button class="tab-btn" onclick="filterTab(this,'fullstack')">Full Stack</button>
+        <button class="tab-btn" onclick="filterTab(this,'testing')">Testing</button>
+        <button class="tab-btn" onclick="filterTab(this,'frontend')">Frontend</button>
+        <button class="tab-btn" onclick="filterTab(this,'backend')">Backend</button>
+        <button class="tab-btn" onclick="filterTab(this,'data')">Data Science</button>
+    </div>
+    <div class="filter-right">
+        <input type="text" class="search-input" placeholder="🔍 Search courses..." oninput="searchCourses(this.value)"/>
+        <select class="filter-select" onchange="sortCourses(this.value)">
+            <option value="">Sort by</option>
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+            <option value="duration">Duration</option>
+        </select>
+    </div>
+</div>
+
+<!-- COURSES GRID -->
+<div class="courses-section">
+    <div class="courses-grid" id="coursesGrid"></div>
+    <div id="noResults" style="display:none;text-align:center;padding:4rem;background:white;border-radius:16px;border:1px solid var(--border);margin-top:1rem">
+        <div style="font-size:3rem;margin-bottom:1rem">📚</div>
+        <h3 style="font-family:'Syne',sans-serif;margin-bottom:0.5rem">No courses found</h3>
+        <p style="color:var(--gray);font-size:0.88rem">Try a different search or browse all courses.</p>
+    </div>
+</div>
+
+<!-- WHY CHOOSE US -->
+<div class="why-section">
+    <div class="why-header reveal">
+        <span class="why-label">Why VibrantMinds</span>
+        <h2 class="why-title">Everything You Need to Get Placed</h2>
+    </div>
+    <div class="why-grid">
+        <div class="why-item reveal"><div class="why-icon">👨‍💻</div><h3>Expert Trainers</h3><p>Learn from professionals with 10+ years of industry experience.</p></div>
+        <div class="why-item reveal reveal-delay-1"><div class="why-icon">🏗️</div><h3>Real Projects</h3><p>Build 5+ industry-grade projects for your portfolio.</p></div>
+        <div class="why-item reveal reveal-delay-2"><div class="why-icon">🚀</div><h3>Placement Support</h3><p>Unlimited drives until you land your first IT job.</p></div>
+        <div class="why-item reveal reveal-delay-3"><div class="why-icon">📋</div><h3>Certificate</h3><p>Industry-recognised certificate on course completion.</p></div>
+        <div class="why-item reveal"><div class="why-icon">🎯</div><h3>Mock Interviews</h3><p>Weekly mock technical and HR interview sessions.</p></div>
+        <div class="why-item reveal reveal-delay-1"><div class="why-icon">📞</div><h3>Mentor Support</h3><p>1-on-1 doubt clearing sessions with your assigned mentor.</p></div>
+    </div>
+</div>
+
+<!-- PROCESS -->
+<div class="process-section">
+    <div class="process-header reveal">
+        <span class="section-label">How It Works</span>
+        <h2 class="section-title">Your Journey to an IT Job</h2>
+    </div>
+    <div class="process-grid reveal">
+        <div class="process-line"></div>
+        <div class="process-step">
+            <div class="step-num"><span class="step-icon">📝</span></div>
+            <h3>Register & Enroll</h3>
+            <p>Choose your course and register online. Book a free demo session first.</p>
+        </div>
+        <div class="process-step">
+            <div class="step-num"><span class="step-icon">📚</span></div>
+            <h3>Learn & Build</h3>
+            <p>Attend daily classes, complete assignments and build real projects.</p>
+        </div>
+        <div class="process-step">
+            <div class="step-num"><span class="step-icon">🎯</span></div>
+            <h3>Interview Prep</h3>
+            <p>Aptitude, GD, technical mock interviews, resume building sessions.</p>
+        </div>
+        <div class="process-step">
+            <div class="step-num"><span class="step-icon">🏆</span></div>
+            <h3>Get Placed</h3>
+            <p>Attend placement drives at 500+ partner companies and get hired.</p>
+        </div>
+    </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-section">
+    <h2>Not Sure Which Course to Pick?</h2>
+    <p>Talk to our counsellors for free. We'll help you choose the right course based on your background and goals.</p>
+    <div class="cta-btns">
+        <a href="contact.html" class="btn-white">Talk to a Counsellor</a>
+        <a href="register.html" class="btn-ghost">Register for Free Demo</a>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+    <div class="footer-bottom">
+        <a href="index.html" class="nav-logo">Vibrant<span style="color:var(--accent)">Minds</span></a>
+        <div class="footer-links-row">
+            <a href="index.html">Home</a>
+            <a href="jobs.html">Jobs</a>
+            <a href="contact.html">Contact</a>
+            <a href="register.html">Register</a>
+        </div>
+        <span>© 2024 VibrantMinds Technologies Pvt. Ltd.</span>
+    </div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+    <div class="modal" id="modal">
+        <div class="modal-hero" id="modalHero">
+            <button class="modal-close" onclick="closeModalBtn()">✕</button>
+            <div class="modal-hero-icon" id="modalIcon"></div>
+        </div>
+        <div class="modal-content">
+            <div class="modal-title" id="modalTitle"></div>
+            <div class="modal-sub" id="modalSub"></div>
+            <div class="modal-stats" id="modalStats"></div>
+            <div class="modal-section">
+                <h4>About this Course</h4>
+                <p id="modalDesc"></p>
+            </div>
+            <div class="modal-section">
+                <h4>Syllabus</h4>
+                <ul class="syllabus-list" id="modalSyllabus"></ul>
+            </div>
+            <div class="modal-section">
+                <h4>Skills You'll Learn</h4>
+                <div class="modal-skills" id="modalSkills"></div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div>
+                <div class="modal-price" id="modalPrice"></div>
+                <div style="font-size:0.72rem;color:var(--gray)">One-time fee, no hidden charges</div>
+            </div>
+            <button class="modal-demo" onclick="bookDemo()">Book Free Demo</button>
+            <button class="modal-enroll" onclick="enrollNow()">Enroll Now →</button>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+    const courses = [
+      {
+        id:1, category:'fullstack', icon:'☕', color:'linear-gradient(135deg,#1a1a2e,#e94560)',
+        tag:'hot', tagLabel:'🔥 Most Popular',
+        title:'Java Full Stack Developer',
+        sub:'Core Java → Spring Boot → React → MySQL → Git',
+        desc:'The most in-demand course in Pune. Master Java from basics to advanced, build REST APIs with Spring Boot, create dynamic UIs with React, and manage databases with MySQL. Includes 5 real-world projects and unlimited placement support.',
+        duration:'6 Months', mode:'Offline', certificate:'Yes', price:'₹15,000', priceOld:'₹20,000', priceNum:15000,
+        skills:['Core Java','OOP','Spring Boot','Hibernate','React.js','MySQL','Git','REST APIs','Maven'],
+        syllabus:['Core Java & OOP Concepts','JDBC & Database Connectivity','Servlet & JSP Basics','Spring Framework & Spring Boot','Hibernate & JPA','RESTful Web Services','React.js Fundamentals','MySQL & SQL Advanced','Git & GitHub','Project Development'],
+        highlights:['5 Real-world Projects','Unlimited Placement Drives','Resume Building Sessions','Mock Interviews Weekly'],
+        placement:'98%', students:'2400+'
+      },
+      {
+        id:2, category:'testing', icon:'🧪', color:'linear-gradient(135deg,#0f3460,#4f46e5)',
+        tag:'popular', tagLabel:'⭐ High Demand',
+        title:'Software Testing (Manual + Automation)',
+        sub:'Manual Testing → Selenium → TestNG → JIRA → Agile',
+        desc:'Become a skilled QA engineer. Learn manual testing fundamentals, automate test cases with Selenium WebDriver, manage test cases with JIRA, and work in Agile/Scrum environments just like real IT companies.',
+        duration:'4 Months', mode:'Offline', certificate:'Yes', price:'₹12,000', priceOld:'₹16,000', priceNum:12000,
+        skills:['Manual Testing','Selenium','TestNG','JIRA','Postman','Agile','SQL','Bug Reporting'],
+        syllabus:['SDLC & STLC Fundamentals','Manual Testing Techniques','Test Case Design','Selenium WebDriver','TestNG Framework','JIRA & Bug Tracking','API Testing with Postman','Agile & Scrum Methodology','Project & Resume'],
+        highlights:['100% Job Assistance','Agile Project Experience','Tool Certifications','Interview Preparation'],
+        placement:'95%', students:'1800+'
+      },
+      {
+        id:3, category:'frontend', icon:'⚛️', color:'linear-gradient(135deg,#06b6d4,#0f3460)',
+        tag:'new', tagLabel:'🆕 New Batch',
+        title:'React + Node.js Full Stack',
+        sub:'React → Node.js → Express → MongoDB → AWS',
+        desc:'Build modern full stack web applications using the MERN stack. Create blazing-fast frontends with React, build scalable backends with Node.js and Express, and deploy on AWS. Perfect for freshers targeting startup and product companies.',
+        duration:'5 Months', mode:'Hybrid', certificate:'Yes', price:'₹14,000', priceOld:'₹18,000', priceNum:14000,
+        skills:['React.js','Node.js','Express.js','MongoDB','JavaScript ES6+','AWS Basics','REST APIs','Git'],
+        syllabus:['JavaScript ES6+ Deep Dive','React Fundamentals & Hooks','React Router & Context API','Node.js & Express.js','MongoDB & Mongoose','JWT Authentication','AWS Deployment','Capstone Project'],
+        highlights:['MERN Stack Projects','Cloud Deployment','Startup-ready Skills','Mock Interviews'],
+        placement:'93%', students:'960+'
+      },
+      {
+        id:4, category:'data', icon:'📊', color:'linear-gradient(135deg,#059669,#0f3460)',
+        tag:'popular', tagLabel:'📈 Growing Demand',
+        title:'Data Science with Python',
+        sub:'Python → Pandas → ML → Tableau → SQL',
+        desc:'Start your data science career with Python. Learn data analysis, machine learning, data visualisation with Tableau, and work with real datasets. Includes hands-on projects in finance, healthcare, and e-commerce domains.',
+        duration:'5 Months', mode:'Offline', certificate:'Yes', price:'₹16,000', priceOld:'₹22,000', priceNum:16000,
+        skills:['Python','Pandas','NumPy','Scikit-learn','Matplotlib','Tableau','SQL','ML Algorithms'],
+        syllabus:['Python Programming Basics','NumPy & Pandas','Data Visualisation','Statistics for DS','Machine Learning Basics','Supervised & Unsupervised Learning','Tableau Dashboards','Capstone Project'],
+        highlights:['3 Domain Projects','ML Model Deployment','Tableau Certification','LinkedIn Profile Help'],
+        placement:'90%', students:'720+'
+      },
+      {
+        id:5, category:'backend', icon:'☁️', color:'linear-gradient(135deg,#f5a623,#e94560)',
+        tag:'new', tagLabel:'🆕 Launching Soon',
+        title:'Python Django Backend Developer',
+        sub:'Python → Django → REST API → PostgreSQL → Docker',
+        desc:'Build production-grade backend systems with Python and Django. Create REST APIs, work with PostgreSQL, containerise with Docker and deploy on cloud. Ideal for candidates looking at backend or DevOps roles.',
+        duration:'4 Months', mode:'Hybrid', certificate:'Yes', price:'₹13,000', priceOld:'₹17,000', priceNum:13000,
+        skills:['Python','Django','REST Framework','PostgreSQL','Docker','Linux Basics','Git','Postman'],
+        syllabus:['Python Advanced Concepts','Django ORM & Models','Django REST Framework','Authentication & JWT','PostgreSQL','Docker & Containerisation','Deployment on Cloud','Project Development'],
+        highlights:['Real API Projects','Docker Deployment','Cloud Hosting','Job Placement'],
+        placement:'88%', students:'480+'
+      },
+      {
+        id:6, category:'fullstack', icon:'📱', color:'linear-gradient(135deg,#7c3aed,#1a1a2e)',
+        tag:'', tagLabel:'',
+        title:'Android App Development (Kotlin)',
+        sub:'Kotlin → Android SDK → Firebase → Room DB → REST',
+        desc:'Build professional Android applications using Kotlin. Learn Android architecture, connect to Firebase, work with Room database, and consume REST APIs. Graduate with 2 complete apps in your portfolio.',
+        duration:'4 Months', mode:'Offline', certificate:'Yes', price:'₹13,500', priceOld:'₹18,000', priceNum:13500,
+        skills:['Kotlin','Android SDK','Firebase','Room DB','Retrofit','MVVM','Git','REST APIs'],
+        syllabus:['Kotlin Fundamentals','Android UI & Layouts','RecyclerView & Adapters','Navigation Components','Firebase Auth & Firestore','Room Database','REST API Integration','Play Store Publishing'],
+        highlights:['2 Complete Apps','Play Store Upload','Portfolio Ready','Tech Interview Prep'],
+        placement:'85%', students:'360+'
+      },
+    ];
+
+    let displayed = [...courses];
+    let activeTab = 'all';
+
+    function renderCourses(list) {
+      const grid = document.getElementById('coursesGrid');
+      const noRes = document.getElementById('noResults');
+      if(!list.length) { grid.innerHTML=''; noRes.style.display='block'; return; }
+      noRes.style.display='none';
+      grid.innerHTML = list.map((c,i) => `
+        <div class="course-card ${c.tag==='popular'?'popular':''} reveal" style="animation-delay:${i*0.05}s" onclick="openModal(${c.id})">
+          <div class="card-banner" style="background:${c.color}">
+            <div class="banner-pattern"></div>
+            <div class="banner-icon">${c.icon}</div>
+            <div class="card-badges">
+              ${c.tagLabel ? `<span class="card-badge badge-${c.tag}">${c.tagLabel}</span>` : ''}
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="course-category">${c.category.toUpperCase()}</div>
+            <div class="course-title">${c.title}</div>
+            <div class="course-desc">${c.desc}</div>
+            <div class="card-meta">
+              <div class="meta-item"><div class="meta-val">${c.duration}</div><div class="meta-label">Duration</div></div>
+              <div class="meta-item"><div class="meta-val">${c.placement}</div><div class="meta-label">Placement</div></div>
+              <div class="meta-item"><div class="meta-val">${c.students}</div><div class="meta-label">Students</div></div>
+            </div>
+            <div class="skills-wrap">${c.skills.slice(0,4).map(s=>`<span class="skill-chip">${s}</span>`).join('')}${c.skills.length>4?`<span class="skill-chip">+${c.skills.length-4}</span>`:''}</div>
+          </div>
+          <div class="card-footer">
+            <div class="price-wrap">
+              <span class="price">${c.price}</span>
+              <span class="price-old">${c.priceOld}</span>
+              <div class="price-note">📍 ${c.mode}</div>
+            </div>
+            <div style="display:flex;gap:0.5rem;align-items:center">
+              <button class="demo-btn" onclick="event.stopPropagation();bookDemo()">Free Demo</button>
+              <button class="enroll-btn" onclick="event.stopPropagation();enrollCourse(${c.id})">Enroll →</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+      document.querySelectorAll('.reveal:not(.visible)').forEach(el => revealObserver.observe(el));
+    }
+
+    function filterTab(btn, cat) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeTab = cat;
+      applyFilters();
+    }
+
+    function searchCourses(val) { applyFilters(val); }
+
+    function applyFilters(search='') {
+      const q = (search || document.querySelector('.search-input').value).toLowerCase();
+      displayed = courses.filter(c => {
+        const matchCat = activeTab==='all' || c.category===activeTab;
+        const matchQ = !q || c.title.toLowerCase().includes(q) || c.skills.join(' ').toLowerCase().includes(q) || c.sub.toLowerCase().includes(q);
+        return matchCat && matchQ;
+      });
+      renderCourses(displayed);
+    }
+
+    function sortCourses(val) {
+      if(val==='price-low') displayed.sort((a,b)=>a.priceNum-b.priceNum);
+      else if(val==='price-high') displayed.sort((a,b)=>b.priceNum-a.priceNum);
+      else if(val==='duration') displayed.sort((a,b)=>parseInt(a.duration)-parseInt(b.duration));
+      renderCourses(displayed);
+    }
+
+    function openModal(id) {
+      const c = courses.find(x=>x.id===id);
+      if(!c) return;
+      document.getElementById('modalHero').style.background = c.color;
+      document.getElementById('modalIcon').textContent = c.icon;
+      document.getElementById('modalTitle').textContent = c.title;
+      document.getElementById('modalSub').textContent = c.sub;
+      document.getElementById('modalStats').innerHTML = `
+        <div class="modal-stat"><div class="modal-stat-val">${c.duration}</div><div class="modal-stat-label">Duration</div></div>
+        <div class="modal-stat"><div class="modal-stat-val">${c.mode}</div><div class="modal-stat-label">Mode</div></div>
+        <div class="modal-stat"><div class="modal-stat-val">${c.placement}</div><div class="modal-stat-label">Placed</div></div>
+        <div class="modal-stat"><div class="modal-stat-val">${c.students}</div><div class="modal-stat-label">Students</div></div>
+      `;
+      document.getElementById('modalDesc').textContent = c.desc;
+      document.getElementById('modalSyllabus').innerHTML = c.syllabus.map((s,i)=>`<li class="syllabus-item"><span class="syl-num">${i+1}</span>${s}</li>`).join('');
+      document.getElementById('modalSkills').innerHTML = c.skills.map(s=>`<span class="modal-skill">${s}</span>`).join('');
+      document.getElementById('modalPrice').textContent = c.price;
+      document.getElementById('modalOverlay').classList.add('open');
+      document.body.style.overflow='hidden';
+    }
+
+    function closeModal(e) { if(e.target===document.getElementById('modalOverlay')) closeModalBtn(); }
+    function closeModalBtn() { document.getElementById('modalOverlay').classList.remove('open'); document.body.style.overflow=''; }
+
+    function enrollCourse(id) {
+      const token = localStorage.getItem('token');
+      if(!token) { showToast('Please login to enroll', false); return; }
+      showToast('Enrolled successfully! ✓', true);
+    }
+
+    function enrollNow() { enrollCourse(1); closeModalBtn(); }
+
+    function bookDemo() {
+      showToast('Demo booked! We will call you shortly. ✓', true);
+      closeModalBtn();
+    }
+
+    function showToast(msg, success=true) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = 'toast show' + (success?' success':'');
+      setTimeout(()=>t.classList.remove('show'),3000);
+    }
+
+    function toggleMenu() { document.getElementById('navLinks').classList.toggle('open'); }
+
+    // REVEAL OBSERVER
+    const revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.05 });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    // INIT
+    renderCourses(courses);
+
+    // ── FETCH FROM BACKEND (uncomment when ready) ──
+    // async function loadCourses() {
+    //   const res = await fetch('/api/courses');
+    //   const data = await res.json();
+    //   if(data.success) {
+    //     // map data.data to courses array format and call renderCourses()
+    //   }
+    // }
+    // loadCourses();
+</script>
 </body>
 </html>

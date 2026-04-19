@@ -1,10 +1,621 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Contact Us – VibrantMinds Technologies</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet"/>
+    <style>
+        :root {
+          --primary: #1a1a2e;
+          --accent: #e94560;
+          --accent2: #0f3460;
+          --gold: #f5a623;
+          --light: #f8f9ff;
+          --white: #ffffff;
+          --gray: #6b7280;
+          --border: #e5e7eb;
+          --gradient: linear-gradient(135deg,#1a1a2e 0%,#0f3460 50%,#16213e 100%);
+          --card-shadow: 0 4px 24px rgba(0,0,0,0.07);
+          --hover-shadow: 0 12px 40px rgba(233,69,96,0.13);
+        }
+        *{margin:0;padding:0;box-sizing:border-box;}
+        html{scroll-behavior:smooth;}
+        body{font-family:'DM Sans',sans-serif;color:var(--primary);background:var(--light);overflow-x:hidden;}
+
+        /* NAV */
+        nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(26,26,46,0.97);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.08);padding:0 5%;height:70px;display:flex;align-items:center;justify-content:space-between;}
+        .nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;color:white;text-decoration:none;letter-spacing:-0.5px;}
+        .nav-logo span{color:var(--accent);}
+        .nav-links{display:flex;gap:2rem;list-style:none;align-items:center;}
+        .nav-links a{color:rgba(255,255,255,0.7);text-decoration:none;font-size:0.9rem;transition:color 0.2s;}
+        .nav-links a:hover,.nav-links a.active{color:white;}
+        .nav-cta{background:var(--accent);color:white!important;padding:0.5rem 1.25rem;border-radius:50px;font-weight:500!important;}
+        .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;}
+        .hamburger span{width:24px;height:2px;background:white;border-radius:2px;}
+
+        /* HERO */
+        .page-hero{background:var(--gradient);padding:120px 5% 80px;position:relative;overflow:hidden;}
+        .page-hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");}
+        .blob{position:absolute;border-radius:50%;filter:blur(80px);opacity:0.12;}
+        .b1{width:400px;height:400px;background:var(--accent);top:-100px;right:-100px;}
+        .b2{width:250px;height:250px;background:var(--gold);bottom:-60px;left:5%;}
+        .hero-inner{position:relative;z-index:1;}
+        .breadcrumb{display:flex;align-items:center;gap:8px;margin-bottom:1.2rem;}
+        .breadcrumb a{color:rgba(255,255,255,0.5);text-decoration:none;font-size:0.82rem;}
+        .breadcrumb span{color:rgba(255,255,255,0.3);font-size:0.82rem;}
+        .breadcrumb .cur{color:rgba(255,255,255,0.8);font-size:0.82rem;}
+        .page-hero h2{font-family:'Syne',sans-serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:750;color:white;letter-spacing:-1px;line-height:1.1;margin-bottom:0.8rem;}
+        .page-hero h2 em{color:var(--accent);font-style:normal;}
+        .page-hero p{color:rgba(255,255,255,0.65);font-size:1rem;max-width:480px;line-height:1.7;font-weight:300;}
+
+        /* CONTACT INFO CARDS */
+        .info-strip{padding:0 5%;margin:-40px auto 0;max-width:1200px;position:relative;z-index:10;}
+        .info-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;}
+        .info-card{background:white;border-radius:16px;border:1px solid var(--border);padding:1.5rem;text-align:center;transition:transform 0.3s,box-shadow 0.3s;box-shadow:var(--card-shadow);}
+        .info-card:hover{transform:translateY(-4px);box-shadow:var(--hover-shadow);}
+        .info-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin:0 auto 0.8rem;}
+        .info-card h4{font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;color:var(--primary);margin-bottom:0.3rem;}
+        .info-card p{font-size:0.8rem;color:var(--gray);line-height:1.6;font-weight:300;}
+        .info-card a{color:var(--accent);text-decoration:none;font-size:0.82rem;font-weight:500;}
+        .info-card a:hover{text-decoration:underline;}
+
+        /* MAIN SECTION */
+        .contact-section{padding:5rem 5%;max-width:1200px;margin:0 auto;}
+        .contact-grid{display:grid;grid-template-columns:1fr 1.6fr;gap:3rem;align-items:start;}
+
+        /* LEFT SIDE */
+        .contact-left{}
+        .section-label{display:inline-block;font-size:0.72rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:0.6rem;}
+        .section-title{font-family:'Syne',sans-serif;font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;color:var(--primary);letter-spacing:-0.5px;line-height:1.2;margin-bottom:1rem;}
+        .section-desc{font-size:0.9rem;color:var(--gray);line-height:1.8;font-weight:300;margin-bottom:2rem;}
+
+        /* OFFICE CARD */
+        .office-card{background:var(--gradient);border-radius:20px;padding:2rem;margin-bottom:1.5rem;position:relative;overflow:hidden;}
+        .office-card::after{content:'';position:absolute;width:150px;height:150px;background:rgba(233,69,96,0.15);border-radius:50%;bottom:-40px;right:-40px;filter:blur(30px);}
+        .office-label{font-size:0.7rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:1rem;}
+        .office-name{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:white;margin-bottom:1rem;}
+        .office-detail{display:flex;align-items:flex-start;gap:10px;margin-bottom:0.8rem;}
+        .office-detail-icon{font-size:1rem;flex-shrink:0;margin-top:2px;}
+        .office-detail-text{font-size:0.83rem;color:rgba(255,255,255,0.7);line-height:1.6;font-weight:300;}
+        .office-detail-text strong{color:white;font-weight:500;}
+        .map-btn{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:white;padding:0.6rem 1.2rem;border-radius:50px;font-size:0.82rem;text-decoration:none;margin-top:1rem;transition:background 0.2s;}
+        .map-btn:hover{background:rgba(255,255,255,0.2);}
+
+        /* HOURS */
+        .hours-card{background:white;border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1.5rem;}
+        .hours-title{font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;color:var(--primary);margin-bottom:1rem;}
+        .hours-row{display:flex;justify-content:space-between;align-items:center;padding:0.5rem 0;border-bottom:1px solid var(--border);font-size:0.83rem;}
+        .hours-row:last-child{border-bottom:none;}
+        .hours-day{color:var(--gray);font-weight:300;}
+        .hours-time{color:var(--primary);font-weight:500;}
+        .hours-time.closed{color:var(--accent);}
+        .status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#10b981;margin-right:6px;animation:pulse 1.5s infinite;}
+        @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(1.3)}}
+
+        /* SOCIAL LINKS */
+        .social-card{background:white;border:1px solid var(--border);border-radius:16px;padding:1.5rem;}
+        .social-title{font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;color:var(--primary);margin-bottom:1rem;}
+        .social-links{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;}
+        .social-link{display:flex;align-items:center;gap:10px;padding:0.7rem;border:1px solid var(--border);border-radius:10px;text-decoration:none;transition:border-color 0.2s,background 0.2s;}
+        .social-link:hover{border-color:var(--accent);background:#fff0f3;}
+        .social-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0;}
+        .social-link-name{font-size:0.82rem;font-weight:500;color:var(--primary);}
+        .social-link-handle{font-size:0.72rem;color:var(--gray);}
+
+        /* FORM */
+        .contact-form-wrap{background:white;border-radius:24px;border:1px solid var(--border);padding:2.5rem;box-shadow:var(--card-shadow);}
+        .form-header{margin-bottom:2rem;}
+        .form-header h3{font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem;color:var(--primary);margin-bottom:0.4rem;}
+        .form-header p{font-size:0.85rem;color:var(--gray);font-weight:300;}
+        .form-tabs{display:flex;gap:0;background:var(--light);border-radius:10px;padding:4px;margin-bottom:2rem;}
+        .form-tab{flex:1;padding:0.55rem;border:none;background:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.82rem;cursor:pointer;color:var(--gray);transition:background 0.2s,color 0.2s;}
+        .form-tab.active{background:white;color:var(--primary);font-weight:500;box-shadow:0 2px 8px rgba(0,0,0,0.08);}
+        .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+        .form-group{margin-bottom:1rem;}
+        .form-group label{display:block;font-size:0.78rem;font-weight:600;letter-spacing:0.5px;color:var(--primary);margin-bottom:0.4rem;text-transform:uppercase;}
+        .form-group input,.form-group select,.form-group textarea{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:0.75rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.9rem;color:var(--primary);outline:none;transition:border-color 0.2s,box-shadow 0.2s;background:var(--light);}
+        .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--accent);background:white;box-shadow:0 0 0 3px rgba(233,69,96,0.08);}
+        .form-group textarea{resize:vertical;min-height:120px;}
+        .form-group.error input,.form-group.error textarea,.form-group.error select{border-color:var(--accent);}
+        .error-msg{font-size:0.75rem;color:var(--accent);margin-top:4px;display:none;}
+        .form-group.error .error-msg{display:block;}
+        .char-count{font-size:0.72rem;color:var(--gray);text-align:right;margin-top:4px;}
+        .submit-btn{width:100%;background:var(--accent);color:white;border:none;border-radius:12px;padding:1rem;font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;transition:background 0.2s,transform 0.2s;display:flex;align-items:center;justify-content:center;gap:8px;}
+        .submit-btn:hover{background:#c73652;transform:translateY(-1px);}
+        .submit-btn:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
+        .form-note{text-align:center;font-size:0.75rem;color:var(--gray);margin-top:1rem;}
+
+        /* SUCCESS STATE */
+        .form-success{display:none;text-align:center;padding:3rem 2rem;}
+        .success-icon{width:72px;height:72px;background:#f0fdf4;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 1.5rem;}
+        .success-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem;color:var(--primary);margin-bottom:0.5rem;}
+        .success-desc{font-size:0.88rem;color:var(--gray);line-height:1.7;font-weight:300;margin-bottom:1.5rem;}
+        .success-back{background:var(--accent);color:white;border:none;border-radius:50px;padding:0.7rem 1.8rem;font-family:'Syne',sans-serif;font-weight:700;cursor:pointer;transition:background 0.2s;}
+        .success-back:hover{background:#c73652;}
+
+        /* FAQ */
+        .faq-section{padding:5rem 5%;background:white;max-width:1200px;margin:0 auto;}
+        .faq-header{text-align:center;margin-bottom:3rem;}
+        .faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+        .faq-item{border:1px solid var(--border);border-radius:14px;overflow:hidden;}
+        .faq-q{display:flex;align-items:center;justify-content:space-between;padding:1.2rem 1.5rem;cursor:pointer;background:white;transition:background 0.2s;}
+        .faq-q:hover{background:var(--light);}
+        .faq-q-text{font-weight:500;font-size:0.9rem;color:var(--primary);}
+        .faq-arrow{color:var(--gray);transition:transform 0.3s;font-size:0.8rem;}
+        .faq-item.open .faq-arrow{transform:rotate(180deg);}
+        .faq-item.open .faq-q{background:var(--light);}
+        .faq-a{display:none;padding:0 1.5rem 1.2rem;font-size:0.84rem;color:var(--gray);line-height:1.8;font-weight:300;}
+        .faq-item.open .faq-a{display:block;}
+
+        /* MAP */
+        .map-section{padding:0 5% 5rem;max-width:1200px;margin:0 auto;}
+        .map-wrap{border-radius:20px;overflow:hidden;border:1px solid var(--border);height:350px;background:var(--light);display:flex;align-items:center;justify-content:center;position:relative;}
+        .map-placeholder{text-align:center;}
+        .map-placeholder-icon{font-size:3rem;margin-bottom:1rem;}
+        .map-placeholder h3{font-family:'Syne',sans-serif;font-weight:700;color:var(--primary);margin-bottom:0.5rem;}
+        .map-placeholder p{font-size:0.85rem;color:var(--gray);}
+        .map-placeholder a{display:inline-block;margin-top:1rem;background:var(--accent);color:white;padding:0.6rem 1.5rem;border-radius:50px;text-decoration:none;font-size:0.85rem;font-weight:500;}
+
+        /* CTA */
+        .cta-section{background:var(--accent);padding:4rem 5%;text-align:center;position:relative;overflow:hidden;}
+        .cta-section::before{content:'';position:absolute;width:400px;height:400px;background:rgba(255,255,255,0.08);border-radius:50%;top:-100px;left:-100px;}
+        .cta-section::after{content:'';position:absolute;width:300px;height:300px;background:rgba(255,255,255,0.06);border-radius:50%;bottom:-80px;right:-80px;}
+        .cta-section h2{font-family:'Syne',sans-serif;font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;color:white;margin-bottom:0.8rem;letter-spacing:-0.5px;position:relative;z-index:1;}
+        .cta-section p{color:rgba(255,255,255,0.8);font-size:1rem;max-width:480px;margin:0 auto 2rem;line-height:1.7;position:relative;z-index:1;}
+        .cta-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;position:relative;z-index:1;}
+        .btn-white{background:white;color:var(--accent);padding:0.85rem 2rem;border-radius:50px;font-weight:600;text-decoration:none;font-size:0.9rem;transition:transform 0.2s,box-shadow 0.2s;display:inline-block;}
+        .btn-white:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.15);}
+        .btn-ghost{border:2px solid rgba(255,255,255,0.5);color:white;padding:0.85rem 2rem;border-radius:50px;font-weight:400;text-decoration:none;font-size:0.9rem;transition:border-color 0.2s,background 0.2s;display:inline-block;}
+        .btn-ghost:hover{border-color:white;background:rgba(255,255,255,0.1);}
+
+        /* FOOTER */
+        footer{background:var(--primary);color:rgba(255,255,255,0.6);padding:2rem 5%;}
+        .footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;font-size:0.8rem;}
+        .footer-links-row{display:flex;gap:1.5rem;}
+        .footer-links-row a{color:rgba(255,255,255,0.5);text-decoration:none;font-size:0.8rem;transition:color 0.2s;}
+        .footer-links-row a:hover{color:white;}
+
+        /* TOAST */
+        .toast{position:fixed;bottom:2rem;right:2rem;z-index:9999;background:var(--primary);color:white;padding:0.8rem 1.5rem;border-radius:12px;font-size:0.85rem;transform:translateY(100px);opacity:0;transition:transform 0.3s,opacity 0.3s;}
+        .toast.show{transform:translateY(0);opacity:1;}
+        .toast.success{background:#059669;}
+        .toast.error-t{background:var(--accent);}
+
+        /* REVEAL */
+        .reveal{opacity:0;transform:translateY(20px);transition:opacity 0.5s ease,transform 0.5s ease;}
+        .reveal.visible{opacity:1;transform:translateY(0);}
+        .rd1{transition-delay:0.1s;} .rd2{transition-delay:0.2s;} .rd3{transition-delay:0.3s;}
+
+        /* SPINNER */
+        .spinner{width:18px;height:18px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin 0.8s linear infinite;}
+        @keyframes spin{to{transform:rotate(360deg)}}
+
+        @media(max-width:900px){
+          .info-grid{grid-template-columns:1fr 1fr;}
+          .contact-grid{grid-template-columns:1fr;}
+          .faq-grid{grid-template-columns:1fr;}
+          .form-row{grid-template-columns:1fr;}
+        }
+        @media(max-width:600px){
+          .nav-links{display:none;}
+          .nav-links.open{display:flex;flex-direction:column;position:absolute;top:70px;left:0;right:0;background:var(--primary);padding:1.5rem 5%;gap:1rem;}
+          .hamburger{display:flex;}
+          .info-grid{grid-template-columns:1fr;}
+          .social-links{grid-template-columns:1fr;}
+        }
+    </style>
 </head>
 <body>
 
+<!-- NAVBAR -->
+<nav>
+    <a href="index.html" class="nav-logo">Vibrant<span>Minds</span></a>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="jobs.html">Jobs</a></li>
+        <li><a href="courses.html">Courses</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html" class="active">Contact</a></li>
+        <li><a href="login.html">Login</a></li>
+        <li><a href="register.html" class="nav-cta">Register Free</a></li>
+    </ul>
+    <div class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- HERO -->
+<div class="page-hero">
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="hero-inner">
+        <div class="breadcrumb">
+            <a href="index.html">Home</a><span>›</span><span class="cur">Contact Us</span>
+        </div>
+        <h2>We'd Love to <em>Hear From You</em></h2>
+        <p>Have a question about our courses, placement drives, or partnerships? Our team is here to help — reach out anytime.</p>
+    </div>
+</div>
+
+<!-- INFO CARDS -->
+<div class="info-strip">
+    <div class="info-grid">
+        <div class="info-card reveal">
+            <div class="info-icon" style="background:#fff0f3">📍</div>
+            <h4>Visit Us</h4>
+            <p>2nd Floor, Viva Building, Near St. Mary's Church, Warje, Pune 411058</p>
+        </div>
+        <div class="info-card reveal rd1">
+            <div class="info-icon" style="background:#f0f9ff">📞</div>
+            <h4>Call Us</h4>
+            <p><a href="tel:+919503579517">+91 95035 79517</a></p>
+            <p style="margin-top:4px"><a href="tel:+919503579517">+91 95035 79517</a></p>
+        </div>
+        <div class="info-card reveal rd2">
+            <div class="info-icon" style="background:#f0fdf4">✉️</div>
+            <h4>Email Us</h4>
+            <p><a href="mailto:support@vibrantmindstech.com">support@vibrantmindstech.com</a></p>
+        </div>
+        <div class="info-card reveal rd3">
+            <div class="info-icon" style="background:#fffbeb">🕐</div>
+            <h4>Working Hours</h4>
+            <p><span class="status-dot"></span>Mon–Sat: 9AM – 7PM</p>
+            <p style="margin-top:4px;color:var(--accent);font-size:0.75rem">Sunday: Closed</p>
+        </div>
+    </div>
+</div>
+
+<!-- MAIN CONTACT SECTION -->
+<div class="contact-section">
+    <div class="contact-grid">
+
+        <!-- LEFT -->
+        <div class="contact-left">
+            <div class="reveal">
+                <span class="section-label">Get In Touch</span>
+                <h2 class="section-title">Let's Start a Conversation</h2>
+                <p class="section-desc">Whether you're a student looking for guidance, a company wanting to hire, or a college seeking placement support — we're just a message away.</p>
+            </div>
+
+            <div class="office-card reveal">
+                <div class="office-label">Our Office</div>
+                <div class="office-name">VibrantMinds Technologies Pvt. Ltd.</div>
+                <div class="office-detail">
+                    <div class="office-detail-icon">📍</div>
+                    <div class="office-detail-text">2nd Floor, Viva Building, Near St. Mary's Church & Vardhman Petrol Pump, Mumbai–Bangalore Highway, Warje, <strong>Pune 411058</strong></div>
+                </div>
+                <div class="office-detail">
+                    <div class="office-detail-icon">📞</div>
+                    <div class="office-detail-text"><strong>+91 95035 79517</strong></div>
+                </div>
+                <div class="office-detail">
+                    <div class="office-detail-icon">✉️</div>
+                    <div class="office-detail-text"><strong>support@vibrantmindstech.com</strong></div>
+                </div>
+                <a href="https://maps.google.com" target="_blank" class="map-btn">📍 Get Directions →</a>
+            </div>
+
+            <div class="hours-card reveal">
+                <div class="hours-title">⏰ Working Hours</div>
+                <div class="hours-row"><span class="hours-day">Monday – Friday</span><span class="hours-time">9:00 AM – 7:00 PM</span></div>
+                <div class="hours-row"><span class="hours-day">Saturday</span><span class="hours-time">9:00 AM – 5:00 PM</span></div>
+                <div class="hours-row"><span class="hours-day">Sunday</span><span class="hours-time closed">Closed</span></div>
+            </div>
+
+            <div class="social-card reveal">
+                <div class="social-title">🌐 Follow Us</div>
+                <div class="social-links">
+                    <a href="#" class="social-link">
+                        <div class="social-icon" style="background:#e7f3ff">in</div>
+                        <div><div class="social-link-name">LinkedIn</div><div class="social-link-handle">@vibrantminds</div></div>
+                    </a>
+                    <a href="#" class="social-link">
+                        <div class="social-icon" style="background:#fff0f3">fb</div>
+                        <div><div class="social-link-name">Facebook</div><div class="social-link-handle">@VibrantMindsTech</div></div>
+                    </a>
+                    <a href="#" class="social-link">
+                        <div class="social-icon" style="background:#fff7ed">ig</div>
+                        <div><div class="social-link-name">Instagram</div><div class="social-link-handle">@vibrantminds_tech</div></div>
+                    </a>
+                    <a href="#" class="social-link">
+                        <div class="social-icon" style="background:#fff0f3">yt</div>
+                        <div><div class="social-link-name">YouTube</div><div class="social-link-handle">VibrantMinds</div></div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT FORM -->
+        <div class="contact-form-wrap reveal">
+            <div class="form-header">
+                <h3>Send Us a Message</h3>
+                <p>We'll get back to you within 24 hours — usually much sooner.</p>
+            </div>
+
+            <!-- FORM TABS -->
+            <div class="form-tabs">
+                <button class="form-tab active" onclick="switchTab(this,'general')">General Enquiry</button>
+                <button class="form-tab" onclick="switchTab(this,'course')">Course Enquiry</button>
+                <button class="form-tab" onclick="switchTab(this,'company')">For Companies</button>
+                <button class="form-tab" onclick="switchTab(this,'college')">For Colleges</button>
+            </div>
+
+            <!-- FORM -->
+            <form id="contactForm" onsubmit="submitForm(event)" novalidate>
+
+                <div class="form-row">
+                    <div class="form-group" id="grp-name">
+                        <label>Full Name *</label>
+                        <input type="text" id="fname" placeholder="Rahul Sharma" oninput="clearError('grp-name')"/>
+                        <div class="error-msg">Please enter your name</div>
+                    </div>
+                    <div class="form-group" id="grp-email">
+                        <label>Email Address *</label>
+                        <input type="email" id="femail" placeholder="rahul@gmail.com" oninput="clearError('grp-email')"/>
+                        <div class="error-msg">Please enter a valid email</div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group" id="grp-phone">
+                        <label>Phone Number *</label>
+                        <input type="tel" id="fphone" placeholder="+91 98765 43210" oninput="clearError('grp-phone')"/>
+                        <div class="error-msg">Please enter your phone number</div>
+                    </div>
+                    <div class="form-group" id="grp-subject">
+                        <label>Subject *</label>
+                        <select id="fsubject" onchange="clearError('grp-subject')">
+                            <option value="">Select a subject</option>
+                            <option>Java Full Stack Course Enquiry</option>
+                            <option>Software Testing Course Enquiry</option>
+                            <option>React + Node.js Course Enquiry</option>
+                            <option>Placement Support</option>
+                            <option>Campus Recruitment</option>
+                            <option>Online Assessment</option>
+                            <option>Partnership</option>
+                            <option>Other</option>
+                        </select>
+                        <div class="error-msg">Please select a subject</div>
+                    </div>
+                </div>
+
+                <!-- Dynamic field based on tab -->
+                <div class="form-group" id="dynamicField" style="display:none">
+                    <label id="dynamicLabel">Course Interested In</label>
+                    <select id="fdynamic">
+                        <option value="">Select...</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="grp-msg">
+                    <label>Message *</label>
+                    <textarea id="fmessage" placeholder="Tell us how we can help you..." maxlength="500" oninput="updateCount(this);clearError('grp-msg')"></textarea>
+                    <div class="char-count"><span id="charCount">0</span>/500</div>
+                    <div class="error-msg">Please enter your message</div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <span id="submitText">Send Message</span>
+                    <span>→</span>
+                </button>
+                <p class="form-note">🔒 We respect your privacy. Your information will never be shared with third parties.</p>
+            </form>
+
+            <!-- SUCCESS STATE -->
+            <div class="form-success" id="formSuccess">
+                <div class="success-icon">✅</div>
+                <div class="success-title">Message Sent Successfully!</div>
+                <div class="success-desc">Thank you for reaching out. Our team will get back to you within 24 hours. We've also sent a confirmation to your email.</div>
+                <button class="success-back" onclick="resetForm()">Send Another Message</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- MAP -->
+<div class="map-section">
+    <div class="map-wrap reveal">
+        <div class="map-placeholder">
+            <div class="map-placeholder-icon">🗺️</div>
+            <h3>Find Us on the Map</h3>
+            <p>Viva Building, Warje, Pune 411058</p>
+            <a href="https://www.google.com/maps/search/?api=1&query=Viva+Academy+Building,+Bengaluru+Mumbai+Hwy,+near+St.+Marys+Church+Petrol+Pump,+Karvenagar,+Rajyog+Society,+Warje,+Pune,+Maharashtra+411052" target="_blank">
+                Open in Google Maps →
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- FAQ -->
+<div style="padding:0 5% 5rem;max-width:1200px;margin:0 auto">
+    <div class="faq-header reveal">
+        <span class="section-label">FAQ</span>
+        <h2 class="section-title">Frequently Asked Questions</h2>
+    </div>
+    <div class="faq-grid reveal">
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-q"><span class="faq-q-text">What courses does VibrantMinds offer?</span><span class="faq-arrow">▼</span></div>
+            <div class="faq-a">We offer Java Full Stack, Software Testing, React + Node.js, Python Django, Data Science, and Android Development courses. All courses include placement support.</div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-q"><span class="faq-q-text">Is there a free demo class available?</span><span class="faq-arrow">▼</span></div>
+            <div class="faq-a">Yes! We offer a free demo class for all our courses. You can book it by filling the contact form above or calling us directly. No commitment required.</div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-q"><span class="faq-q-text">What is the placement process?</span><span class="faq-arrow">▼</span></div>
+            <div class="faq-a">After course completion, we provide resume building, mock interviews, aptitude training, and connect you with 500+ hiring partners. You can attend unlimited placement drives until you get placed.</div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-q"><span class="faq-q-text">Can freshers with no coding background join?</span><span class="faq-arrow">▼</span></div>
+            <div class="faq-a">Absolutely! Our courses are designed for freshers and career switchers. We start from the very basics and take you to an industry-ready level step by step.</div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-q"><span class="faq-q-text">How can companies partner with VibrantMinds?</span><span class="faq-arrow">▼</span></div>
+            <div class="faq-a">Companies can register on our platform to access our pool of trained candidates, post jobs, conduct campus drives, and use our online assessment tools. Contact us for a partnership discussion.</div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-q"><span class="faq-q-text">Do you provide EMI or instalment options?</span><span class="faq-arrow">▼</span></div>
+            <div class="faq-a">Yes, we offer flexible payment options including EMI and instalments. Please contact our counsellors for details about the payment plan that suits you best.</div>
+        </div>
+    </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-section">
+    <h2>Ready to Launch Your IT Career?</h2>
+    <p>Join 15,000+ students who transformed their careers with VibrantMinds. Register for a free demo today.</p>
+    <div class="cta-btns">
+        <a href="register.html" class="btn-white">Register for Free Demo</a>
+        <a href="courses.html" class="btn-ghost">Browse Courses</a>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+    <div class="footer-bottom">
+        <a href="index.html" class="nav-logo">Vibrant<span style="color:var(--accent)">Minds</span></a>
+        <div class="footer-links-row">
+            <a href="index.html">Home</a>
+            <a href="jobs.html">Jobs</a>
+            <a href="courses.html">Courses</a>
+            <a href="register.html">Register</a>
+        </div>
+        <span>© 2024 VibrantMinds Technologies Pvt. Ltd.</span>
+    </div>
+</footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+    // NAV
+    function toggleMenu(){document.getElementById('navLinks').classList.toggle('open');}
+
+    // REVEAL
+    const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.08});
+    document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+    // CHAR COUNT
+    function updateCount(el){document.getElementById('charCount').textContent=el.value.length;}
+
+    // CLEAR ERROR
+    function clearError(id){document.getElementById(id).classList.remove('error');}
+
+    // TAB SWITCHING
+    const tabData = {
+      general:{label:'',options:[]},
+      course:{label:'Course Interested In',options:['Java Full Stack Developer','Software Testing','React + Node.js','Python Django','Data Science','Android Development']},
+      company:{label:'Company Size',options:['Startup (1–50)','SME (51–200)','Mid-size (201–500)','Large (500+)','MNC']},
+      college:{label:'College Type',options:['Engineering','Management','Science & Arts','Polytechnic','University']}
+    };
+
+    function switchTab(btn,tab){
+      document.querySelectorAll('.form-tab').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      const d=tabData[tab];
+      const dynField=document.getElementById('dynamicField');
+      const dynLabel=document.getElementById('dynamicLabel');
+      const dynSelect=document.getElementById('fdynamic');
+      if(d.options.length){
+        dynField.style.display='block';
+        dynLabel.textContent=d.label;
+        dynSelect.innerHTML='<option value="">Select...</option>'+d.options.map(o=>`<option>${o}</option>`).join('');
+      } else {
+        dynField.style.display='none';
+      }
+      // update subject options
+      const subjectMap={
+        general:['Java Full Stack Course Enquiry','Software Testing Course Enquiry','Placement Support','Partnership','Other'],
+        course:['Java Full Stack Developer','Software Testing','React + Node.js','Python Django','Data Science','Android Development'],
+        company:['Campus Recruitment','Online Assessment','Bulk Hiring','Partnership','Other'],
+        college:['Campus Placement','MOU Partnership','Online Assessment for Students','Training Programs','Other']
+      };
+      const sel=document.getElementById('fsubject');
+      sel.innerHTML='<option value="">Select a subject</option>'+subjectMap[tab].map(o=>`<option>${o}</option>`).join('');
+    }
+
+    // FORM VALIDATION
+    function validateForm(){
+      let valid=true;
+      const name=document.getElementById('fname').value.trim();
+      const email=document.getElementById('femail').value.trim();
+      const phone=document.getElementById('fphone').value.trim();
+      const subject=document.getElementById('fsubject').value;
+      const msg=document.getElementById('fmessage').value.trim();
+      if(!name){document.getElementById('grp-name').classList.add('error');valid=false;}
+      if(!email||!/\S+@\S+\.\S+/.test(email)){document.getElementById('grp-email').classList.add('error');valid=false;}
+      if(!phone||phone.length<10){document.getElementById('grp-phone').classList.add('error');valid=false;}
+      if(!subject){document.getElementById('grp-subject').classList.add('error');valid=false;}
+      if(!msg||msg.length<10){document.getElementById('grp-msg').classList.add('error');valid=false;}
+      return valid;
+    }
+
+    // FORM SUBMIT
+    async function submitForm(e){
+      e.preventDefault();
+      if(!validateForm()) return;
+
+      const btn=document.getElementById('submitBtn');
+      const txt=document.getElementById('submitText');
+      btn.disabled=true;
+      txt.textContent='Sending...';
+      btn.innerHTML='<div class="spinner"></div><span>Sending...</span>';
+
+      const payload={
+        name:document.getElementById('fname').value.trim(),
+        email:document.getElementById('femail').value.trim(),
+        phone:document.getElementById('fphone').value.trim(),
+        subject:document.getElementById('fsubject').value,
+        message:document.getElementById('fmessage').value.trim()
+      };
+
+      try {
+        // REAL API CALL — uncomment when backend is ready
+        // const res = await fetch('/api/contact', {
+        //   method: 'POST',
+        //   headers: {'Content-Type':'application/json'},
+        //   body: JSON.stringify(payload)
+        // });
+        // const data = await res.json();
+        // if(!data.success) throw new Error(data.message);
+
+        // SIMULATED SUCCESS (remove when API is ready)
+        await new Promise(r=>setTimeout(r,1500));
+
+        document.getElementById('contactForm').style.display='none';
+        document.getElementById('formSuccess').style.display='block';
+        showToast('Message sent successfully! ✓',true);
+
+      } catch(err){
+        showToast('Failed to send. Please try again.', false);
+        btn.disabled=false;
+        btn.innerHTML='<span id="submitText">Send Message</span><span>→</span>';
+      }
+    }
+
+    function resetForm(){
+      document.getElementById('contactForm').reset();
+      document.getElementById('charCount').textContent='0';
+      document.getElementById('contactForm').style.display='block';
+      document.getElementById('formSuccess').style.display='none';
+      document.getElementById('submitBtn').innerHTML='<span id="submitText">Send Message</span><span>→</span>';
+      document.getElementById('submitBtn').disabled=false;
+    }
+
+    // FAQ TOGGLE
+    function toggleFaq(item){
+      const isOpen=item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(f=>f.classList.remove('open'));
+      if(!isOpen) item.classList.add('open');
+    }
+
+    // TOAST
+    function showToast(msg,success=true){
+      const t=document.getElementById('toast');
+      t.textContent=msg;
+      t.className='toast show'+(success?' success':' error-t');
+      setTimeout(()=>t.classList.remove('show'),3500);
+    }
+</script>
 </body>
 </html>
