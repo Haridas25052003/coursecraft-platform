@@ -1,10 +1,520 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Admin Dashboard – VibrantMinds</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet"/>
+    <style>
+        :root{--primary:#1a1a2e;--accent:#e94560;--accent2:#0f3460;--gold:#f5a623;--light:#f8f9ff;--white:#fff;--gray:#6b7280;--border:#e5e7eb;--gradient:linear-gradient(135deg,#1a1a2e 0%,#0f3460 50%,#16213e 100%);--sw:265px;}
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--primary);display:flex;min-height:100vh;}
+
+        /* SIDEBAR */
+        .sidebar{width:var(--sw);min-height:100vh;background:var(--gradient);position:fixed;left:0;top:0;bottom:0;display:flex;flex-direction:column;z-index:200;transition:transform 0.3s;}
+        .sb-logo{padding:1.8rem 1.5rem 1.2rem;border-bottom:1px solid rgba(255,255,255,0.08);}
+        .logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:white;text-decoration:none;}
+        .logo span{color:var(--accent);}
+        .admin-chip{display:inline-block;background:rgba(233,69,96,0.2);border:1px solid rgba(233,69,96,0.3);color:#ff8fa3;font-size:0.62rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:50px;margin-top:6px;}
+        .sb-user{padding:1.2rem 1.5rem;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;gap:0.8rem;}
+        .ua{width:40px;height:40px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:0.9rem;color:white;flex-shrink:0;}
+        .un{font-size:0.85rem;color:white;font-weight:500;}
+        .ur{font-size:0.7rem;color:rgba(255,255,255,0.5);}
+        .sb-nav{flex:1;padding:1rem 0;overflow-y:auto;}
+        .nl{font-size:0.62rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.3);padding:0.5rem 1.5rem 0.3rem;}
+        .ni{display:flex;align-items:center;gap:0.75rem;padding:0.7rem 1.5rem;color:rgba(255,255,255,0.65);font-size:0.85rem;transition:all 0.2s;border-left:3px solid transparent;cursor:pointer;background:none;border-right:none;border-top:none;border-bottom:none;width:100%;font-family:'DM Sans',sans-serif;text-align:left;}
+        .ni:hover{color:white;background:rgba(255,255,255,0.06);border-left-color:rgba(255,255,255,0.3);}
+        .ni.active{color:white;background:rgba(233,69,96,0.15);border-left-color:var(--accent);}
+        .ni-icon{font-size:1rem;width:20px;text-align:center;flex-shrink:0;}
+        .nb{margin-left:auto;background:var(--accent);color:white;font-size:0.62rem;font-weight:700;padding:2px 7px;border-radius:50px;}
+        .sb-foot{padding:1.2rem 1.5rem;border-top:1px solid rgba(255,255,255,0.08);}
+        .lb{display:flex;align-items:center;gap:0.75rem;color:rgba(255,255,255,0.5);font-size:0.84rem;cursor:pointer;transition:color 0.2s;background:none;border:none;font-family:'DM Sans',sans-serif;padding:0;}
+        .lb:hover{color:var(--accent);}
+
+        /* MAIN */
+        .main{margin-left:var(--sw);flex:1;display:flex;flex-direction:column;}
+        .topbar{background:white;border-bottom:1px solid var(--border);padding:0 2rem;height:65px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+        .tl{display:flex;align-items:center;gap:1rem;}
+        .mt{background:none;border:none;cursor:pointer;font-size:1.3rem;display:none;}
+        .pt{font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;color:var(--primary);}
+        .tr{display:flex;align-items:center;gap:1rem;}
+        .tb{background:none;border:1.5px solid var(--border);border-radius:10px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;transition:border-color 0.2s;position:relative;}
+        .tb:hover{border-color:var(--accent);}
+        .nd{position:absolute;top:6px;right:6px;width:7px;height:7px;background:var(--accent);border-radius:50%;border:2px solid white;}
+        .tav{width:36px;height:36px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:0.8rem;color:white;cursor:pointer;}
+        .content{padding:2rem;flex:1;}
+
+        /* SECTIONS */
+        .ps{display:none;} .ps.active{display:block;}
+
+        /* STATS */
+        .sg{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem;}
+        .sc{background:white;border:1px solid var(--border);border-radius:16px;padding:1.2rem 1.5rem;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;}
+        .sc:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,0.07);}
+        .st{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.8rem;}
+        .si{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;}
+        .str{font-size:0.7rem;padding:2px 8px;border-radius:50px;font-weight:600;}
+        .up{background:#f0fdf4;color:#15803d;} .dn{background:#fff0f3;color:var(--accent);} .nt{background:#f1f5f9;color:#475569;}
+        .sn{font-family:'Syne',sans-serif;font-weight:800;font-size:1.9rem;color:var(--primary);line-height:1;}
+        .sl{font-size:0.78rem;color:var(--gray);margin-top:3px;}
+
+        /* CHARTS */
+        .cr{display:grid;grid-template-columns:2fr 1fr;gap:1.5rem;margin-bottom:2rem;}
+        .cc{background:white;border:1px solid var(--border);border-radius:16px;padding:1.5rem;}
+        .ch{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;}
+        .ct{font-family:'Syne',sans-serif;font-weight:700;font-size:0.95rem;color:var(--primary);}
+        .cbadge{font-size:0.72rem;background:var(--light);border:1px solid var(--border);padding:3px 10px;border-radius:50px;color:var(--gray);}
+        .bc{display:flex;align-items:flex-end;gap:0.5rem;height:140px;}
+        .bcol{flex:1;display:flex;flex-direction:column;align-items:center;}
+        .bf{width:100%;border-radius:6px 6px 0 0;position:relative;cursor:pointer;}
+        .bf:hover::after{content:attr(data-v);position:absolute;top:-24px;left:50%;transform:translateX(-50%);background:var(--primary);color:white;font-size:0.65rem;padding:2px 6px;border-radius:4px;white-space:nowrap;}
+        .blabels{display:flex;justify-content:space-between;margin-top:0.5rem;}
+        .blabels span{font-size:0.65rem;color:var(--gray);flex:1;text-align:center;}
+        .dw{display:flex;flex-direction:column;align-items:center;gap:1rem;}
+        .dleg{width:100%;display:flex;flex-direction:column;gap:0.5rem;}
+        .li{display:flex;align-items:center;gap:8px;font-size:0.78rem;}
+        .ld{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+        .ll{flex:1;color:var(--gray);}
+        .lv{font-weight:600;color:var(--primary);}
+
+        /* QUICK ACTIONS */
+        .qg{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem;}
+        .qc{background:white;border:1px solid var(--border);border-radius:14px;padding:1.2rem;text-align:center;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s,border-color 0.2s;}
+        .qc:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,0.07);border-color:var(--accent);}
+        .qi{font-size:1.8rem;margin-bottom:0.5rem;}
+        .ql{font-family:'Syne',sans-serif;font-weight:700;font-size:0.82rem;color:var(--primary);}
+        .qs{font-size:0.7rem;color:var(--gray);margin-top:2px;}
+
+        /* ACTIVITY */
+        .alist{display:flex;flex-direction:column;}
+        .ai{display:flex;align-items:flex-start;gap:1rem;padding:0.9rem 1.5rem;border-bottom:1px solid var(--border);}
+        .ai:last-child{border-bottom:none;}
+        .aicon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0;}
+        .atxt{flex:1;}
+        .atitle{font-size:0.85rem;color:var(--primary);font-weight:500;}
+        .asub{font-size:0.75rem;color:var(--gray);margin-top:1px;}
+        .atime{font-size:0.72rem;color:var(--gray);flex-shrink:0;white-space:nowrap;}
+
+        /* TABLE */
+        .tcard{background:white;border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:1.5rem;}
+        .thead{padding:1.2rem 1.5rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:0.8rem;}
+        .ttitle{font-family:'Syne',sans-serif;font-weight:700;font-size:0.95rem;color:var(--primary);}
+        .tacts{display:flex;gap:0.6rem;align-items:center;flex-wrap:wrap;}
+        .tsrch{border:1.5px solid var(--border);border-radius:8px;padding:0.45rem 0.9rem;font-family:'DM Sans',sans-serif;font-size:0.82rem;color:var(--primary);outline:none;width:200px;transition:border-color 0.2s;}
+        .tsrch:focus{border-color:var(--accent);}
+        .tsel{border:1.5px solid var(--border);border-radius:8px;padding:0.45rem 0.8rem;font-family:'DM Sans',sans-serif;font-size:0.82rem;color:var(--primary);outline:none;cursor:pointer;background:white;}
+        .abtn{background:var(--accent);color:white;border:none;border-radius:8px;padding:0.48rem 1rem;font-family:'Syne',sans-serif;font-weight:700;font-size:0.8rem;cursor:pointer;display:flex;align-items:center;gap:5px;}
+        .abtn:hover{background:#c73652;}
+        table{width:100%;border-collapse:collapse;}
+        thead th{font-size:0.72rem;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--gray);padding:0.8rem 1.5rem;text-align:left;background:var(--light);border-bottom:1px solid var(--border);}
+        tbody tr{border-bottom:1px solid var(--border);transition:background 0.15s;}
+        tbody tr:last-child{border-bottom:none;}
+        tbody tr:hover{background:#fafafa;}
+        tbody td{padding:0.85rem 1.5rem;font-size:0.84rem;color:var(--primary);vertical-align:middle;}
+        .tdg{color:var(--gray);font-size:0.78rem;}
+        .av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:700;font-size:0.72rem;color:white;flex-shrink:0;}
+        .nw{display:flex;align-items:center;gap:0.6rem;}
+        .bdg{display:inline-flex;align-items:center;gap:4px;font-size:0.7rem;font-weight:600;padding:3px 10px;border-radius:50px;}
+        .bact{background:#f0fdf4;color:#15803d;} .bina{background:#f1f5f9;color:#475569;}
+        .bapp{background:#eff6ff;color:#1d4ed8;} .bsh{background:#fdf4ff;color:#7e22ce;}
+        .bint{background:#fff7ed;color:#c2410c;} .bsel{background:#f0fdf4;color:#15803d;}
+        .brej{background:#fff0f3;color:var(--accent);} .bpay{background:#fffbeb;color:#92400e;}
+        .bpaid{background:#f0fdf4;color:#15803d;} .benr{background:#eff6ff;color:#1d4ed8;}
+        .bcom{background:#f0fdf4;color:#15803d;}
+        .acbts{display:flex;gap:0.4rem;}
+        .acb{background:none;border:1.5px solid var(--border);border-radius:6px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.8rem;transition:all 0.2s;}
+        .acb:hover{border-color:var(--accent);background:#fff0f3;}
+
+        /* MODAL */
+        .mo{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:1rem;}
+        .mo.open{display:flex;}
+        .md{background:white;border-radius:20px;max-width:560px;width:100%;max-height:90vh;overflow-y:auto;position:relative;animation:su 0.3s ease;}
+        @keyframes su{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        .mh{padding:1.5rem 1.5rem 1rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:white;z-index:1;border-radius:20px 20px 0 0;}
+        .mh h3{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--primary);}
+        .mc{background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--gray);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+        .mc:hover{background:var(--light);}
+        .mb{padding:1.5rem;}
+        .mr{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:0;}
+        .mg{margin-bottom:1rem;}
+        .mg label{display:block;font-size:0.72rem;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;color:var(--primary);margin-bottom:0.35rem;}
+        .mg input,.mg select,.mg textarea{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:0.65rem 0.9rem;font-family:'DM Sans',sans-serif;font-size:0.87rem;color:var(--primary);outline:none;transition:border-color 0.2s;background:white;}
+        .mg input:focus,.mg select:focus,.mg textarea:focus{border-color:var(--accent);}
+        .mg textarea{resize:vertical;min-height:80px;}
+        .mf{padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;gap:0.8rem;justify-content:flex-end;}
+        .bcl{background:var(--light);color:var(--gray);border:1.5px solid var(--border);border-radius:10px;padding:0.6rem 1.3rem;font-family:'DM Sans',sans-serif;font-size:0.85rem;cursor:pointer;}
+        .bsv{background:var(--accent);color:white;border:none;border-radius:10px;padding:0.6rem 1.5rem;font-family:'Syne',sans-serif;font-weight:700;font-size:0.85rem;cursor:pointer;}
+        .bsv:hover{background:#c73652;}
+
+        /* CONFIRM */
+        .co{position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;}
+        .co.open{display:flex;}
+        .cb{background:white;border-radius:16px;padding:2rem;max-width:360px;width:90%;text-align:center;}
+        .cbi{font-size:2.5rem;margin-bottom:1rem;}
+        .cbt{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;margin-bottom:0.4rem;}
+        .cbd{font-size:0.84rem;color:var(--gray);margin-bottom:1.5rem;}
+        .cbb{display:flex;gap:0.8rem;justify-content:center;}
+        .ccl{background:var(--light);color:var(--gray);border:1.5px solid var(--border);border-radius:10px;padding:0.6rem 1.5rem;cursor:pointer;font-family:'DM Sans',sans-serif;}
+        .cok{background:var(--accent);color:white;border:none;border-radius:10px;padding:0.6rem 1.5rem;cursor:pointer;font-family:'Syne',sans-serif;font-weight:700;}
+
+        /* TOAST */
+        .toast{position:fixed;bottom:2rem;right:2rem;z-index:9999;padding:0.9rem 1.4rem;border-radius:12px;font-size:0.85rem;color:white;transform:translateY(80px);opacity:0;transition:transform 0.3s,opacity 0.3s;max-width:300px;font-weight:500;pointer-events:none;}
+        .toast.show{transform:translateY(0);opacity:1;}
+        .toast.success{background:#059669;} .toast.error-t{background:var(--accent);} .toast.info{background:var(--primary);}
+
+        @media(max-width:900px){
+          .sidebar{transform:translateX(-100%);} .sidebar.open{transform:translateX(0);}
+          .main{margin-left:0;} .mt{display:flex;}
+          .sg,.qg{grid-template-columns:1fr 1fr;} .cr{grid-template-columns:1fr;}
+        }
+        @media(max-width:500px){
+          .sg,.qg{grid-template-columns:1fr;} .content{padding:1rem;} .mr{grid-template-columns:1fr;}
+        }
+    </style>
 </head>
 <body>
 
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+    <div class="sb-logo">
+        <a href="../index.html" class="logo">Vibrant<span>Minds</span></a>
+        <div class="admin-chip">Admin Panel</div>
+    </div>
+    <div class="sb-user">
+        <div class="ua" id="sba">VS</div>
+        <div><div class="un" id="sbn">Vikas Shinde</div><div class="ur">Super Admin</div></div>
+    </div>
+    <nav class="sb-nav">
+        <div class="nl">Overview</div>
+        <button class="ni active" onclick="sp('dashboard',this)"><span class="ni-icon">📊</span>Dashboard</button>
+        <div class="nl">Manage</div>
+        <button class="ni" onclick="sp('jobs',this)"><span class="ni-icon">💼</span>Jobs<span class="nb">8</span></button>
+        <button class="ni" onclick="sp('courses',this)"><span class="ni-icon">📚</span>Courses</button>
+        <button class="ni" onclick="sp('candidates',this)"><span class="ni-icon">👥</span>Candidates<span class="nb">24</span></button>
+        <button class="ni" onclick="sp('applications',this)"><span class="ni-icon">📋</span>Applications</button>
+        <button class="ni" onclick="sp('enrollments',this)"><span class="ni-icon">🎓</span>Enrollments</button>
+        <button class="ni" onclick="sp('companies',this)"><span class="ni-icon">🏢</span>Companies</button>
+        <button class="ni" onclick="sp('colleges',this)"><span class="ni-icon">🏫</span>Colleges</button>
+        <button class="ni" onclick="sp('placements',this)"><span class="ni-icon">🏆</span>Placements</button>
+        <button class="ni" onclick="sp('testimonials',this)"><span class="ni-icon">💬</span>Testimonials</button>
+    </nav>
+    <div class="sb-foot"><button class="lb" onclick="logout()"><span>🚪</span> Logout</button></div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+    <div class="topbar">
+        <div class="tl">
+            <button class="mt" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+            <div class="pt" id="pt">Dashboard</div>
+        </div>
+        <div class="tr">
+            <div class="tb" onclick="showToast('No new notifications','info')">🔔<div class="nd"></div></div>
+            <div class="tb" onclick="showToast('Settings coming soon','info')">⚙️</div>
+            <div class="tav" id="tav">VS</div>
+        </div>
+    </div>
+
+    <div class="content">
+
+        <!-- DASHBOARD -->
+        <div class="ps active" id="pg-dashboard">
+            <div class="sg">
+                <div class="sc" onclick="sp('candidates',null)"><div class="st"><div class="si" style="background:#fff0f3">👥</div><span class="str up">+12 this month</span></div><div class="sn" id="sCand">247</div><div class="sl">Total Candidates</div></div>
+                <div class="sc" onclick="sp('jobs',null)"><div class="st"><div class="si" style="background:#f0f9ff">💼</div><span class="str up">+3 new</span></div><div class="sn" id="sJobs">38</div><div class="sl">Active Jobs</div></div>
+                <div class="sc" onclick="sp('applications',null)"><div class="st"><div class="si" style="background:#f0fdf4">📋</div><span class="str up">+28 this week</span></div><div class="sn" id="sApps">156</div><div class="sl">Total Applications</div></div>
+                <div class="sc" onclick="sp('placements',null)"><div class="st"><div class="si" style="background:#fffbeb">🏆</div><span class="str up">+8 this month</span></div><div class="sn" id="sPlaced">89</div><div class="sl">Students Placed</div></div>
+            </div>
+            <div class="qg">
+                <div class="qc" onclick="om('job')"><div class="qi">➕</div><div class="ql">Post New Job</div><div class="qs">Add a job listing</div></div>
+                <div class="qc" onclick="om('course')"><div class="qi">📚</div><div class="ql">Add Course</div><div class="qs">Create a new course</div></div>
+                <div class="qc" onclick="om('company')"><div class="qi">🏢</div><div class="ql">Add Company</div><div class="qs">Register a company</div></div>
+                <div class="qc" onclick="om('testimonial')"><div class="qi">💬</div><div class="ql">Add Testimonial</div><div class="qs">Add success story</div></div>
+            </div>
+            <div class="cr">
+                <div class="cc">
+                    <div class="ch"><span class="ct">Applications This Week</span><span class="cbadge">Last 7 days</span></div>
+                    <div class="bc" id="barC"></div>
+                    <div class="blabels"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
+                </div>
+                <div class="cc">
+                    <div class="ch"><span class="ct">Application Status</span></div>
+                    <div class="dw">
+                        <svg width="130" height="130" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="35" fill="none" stroke="#e5e7eb" stroke-width="18"/>
+                            <circle cx="50" cy="50" r="35" fill="none" stroke="#e94560" stroke-width="18" stroke-dasharray="66 144" stroke-dashoffset="25" transform="rotate(-90 50 50)"/>
+                            <circle cx="50" cy="50" r="35" fill="none" stroke="#7c3aed" stroke-width="18" stroke-dasharray="36 174" stroke-dashoffset="-41" transform="rotate(-90 50 50)"/>
+                            <circle cx="50" cy="50" r="35" fill="none" stroke="#f59e0b" stroke-width="18" stroke-dasharray="22 188" stroke-dashoffset="-77" transform="rotate(-90 50 50)"/>
+                            <circle cx="50" cy="50" r="35" fill="none" stroke="#059669" stroke-width="18" stroke-dasharray="20 190" stroke-dashoffset="-99" transform="rotate(-90 50 50)"/>
+                            <text x="50" y="54" text-anchor="middle" font-size="10" font-weight="800" fill="#1a1a2e" font-family="Syne">156</text>
+                        </svg>
+                        <div class="dleg">
+                            <div class="li"><div class="ld" style="background:#e94560"></div><div class="ll">Applied</div><div class="lv">66</div></div>
+                            <div class="li"><div class="ld" style="background:#7c3aed"></div><div class="ll">Shortlisted</div><div class="lv">36</div></div>
+                            <div class="li"><div class="ld" style="background:#f59e0b"></div><div class="ll">Interview</div><div class="lv">22</div></div>
+                            <div class="li"><div class="ld" style="background:#059669"></div><div class="ll">Selected</div><div class="lv">20</div></div>
+                            <div class="li"><div class="ld" style="background:#e5e7eb"></div><div class="ll">Rejected</div><div class="lv">12</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tcard">
+                <div class="thead"><span class="ttitle">Recent Activity</span><span class="cbadge">Today</span></div>
+                <div class="alist">
+                    <div class="ai"><div class="aicon" style="background:#fff0f3">📋</div><div class="atxt"><div class="atitle">Rahul Sharma applied for Java Full Stack @ TCS</div><div class="asub">New application received</div></div><div class="atime">2 min ago</div></div>
+                    <div class="ai"><div class="aicon" style="background:#f0fdf4">✅</div><div class="atxt"><div class="atitle">Priya Patil shortlisted for QA Engineer @ Infosys</div><div class="asub">Application status updated</div></div><div class="atime">15 min ago</div></div>
+                    <div class="ai"><div class="aicon" style="background:#f0f9ff">🎓</div><div class="atxt"><div class="atitle">Amit Kumar enrolled in Java Full Stack Developer course</div><div class="asub">New course enrollment</div></div><div class="atime">1 hr ago</div></div>
+                    <div class="ai"><div class="aicon" style="background:#fffbeb">🏆</div><div class="atxt"><div class="atitle">Sneha Desai placed at Wipro as React Developer</div><div class="asub">Placement recorded</div></div><div class="atime">3 hr ago</div></div>
+                    <div class="ai"><div class="aicon" style="background:#fdf4ff">💼</div><div class="atxt"><div class="atitle">New job posted: Spring Boot Developer @ Capgemini</div><div class="asub">Job listing created</div></div><div class="atime">5 hr ago</div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- JOBS -->
+        <div class="ps" id="pg-jobs">
+            <div class="tcard">
+                <div class="thead"><span class="ttitle">Job Listings</span><div class="tacts"><input class="tsrch" placeholder="🔍 Search jobs..." oninput="ft('jt',this.value)"/><select class="tsel" onchange="fbs('jt',this.value,5)"><option value="">All Status</option><option>Active</option><option>Inactive</option></select><button class="abtn" onclick="om('job')">+ Add Job</button></div></div>
+                <div style="overflow-x:auto"><table id="jt">
+                    <thead><tr><th>Job Title</th><th>Company</th><th>Location</th><th>Type</th><th>Salary</th><th>Status</th><th>Actions</th></tr></thead>
+                    <tbody>
+                    <tr><td><strong>Java Full Stack Developer</strong></td><td>TCS</td><td>Pune</td><td>Full Time</td><td>3.5 LPA</td><td><span class="bdg bact">● Active</span></td><td><div class="acbts"><button class="acb" onclick="ei('job','Java Full Stack')">✏️</button><button class="acb" onclick="cd()">🗑️</button></div></td></tr>
+                    <tr><td><strong>QA Test Engineer</strong></td><td>Infosys</td><td>Bangalore</td><td>Full Time</td><td>4.0 LPA</td><td><span class="bdg bact">● Active</span></td><td><div class="acbts"><button class="acb" onclick="ei('job','QA Test Engineer')">✏️</button><button class="acb" onclick="cd()">🗑️</button></div></td></tr>
+                    <tr><td><strong>React Developer</strong></td><td>Wipro</td><td>Hyderabad</td><td>Full Time</td><td>4.5 LPA</td><td><span class="bdg bact">● Active</span></td><td><div class="acbts"><button class="acb" onclick="ei('job','React Developer')">✏️</button><button class="acb" onclick="cd()">🗑️</button></div></td></tr>
+                    <tr><td><strong>Spring Boot Developer</strong></td><td>Capgemini</td><td>Mumbai</td><td>Full Time</td><td>5.0 LPA</td><td><span class="bdg bact">● Active</span></td><td><div class="acbts"><button class="acb" onclick="ei('job','Spring Boot Dev')">✏️</button><button class="acb" onclick="cd()">🗑️</button></div></td></tr>
+                    <tr><td><strong>Python Developer Intern</strong></td><td>Persistent</td><td>Pune</td><td>Internship</td><td>₹15k/mo</td><td><span class="bdg bina">○ Inactive</span></td><td><div class="acbts"><button class="acb" onclick="ei('job','Python Intern')">✏️</button><button class="acb" onclick="cd()">🗑️</button></div></td></tr>
+                    <tr><td><strong>Android Developer</strong></td><td>Zensar</td><td>Pune</td><td>Full Time</td><td>6.0 LPA</td><td><span class="bdg bact">● Active</span></td><td><div class="acbts"><button class="acb" onclick="ei('job','Android Dev')">✏️</button><button class="acb" onclick="cd()">🗑️</button></div></td></tr>
+                    <tr><td><strong>DevOps Engineer</strong></td><td>HCL</td><td>Chennai</td><td>Full Time</td><td>7.0 LPA</td><td><span class="bdg bact">● Active</span></td><td><div class="acbts"><button class="acb" onclick="ei('job','DevOps')">✏️</button><button class="acb" onclick="cd()">🗑️</button></div></td></tr>
+                    <tr><td><strong>Node.js Developer</strong></td><td>LTIMindtree</td><td>Mumbai</td><td>Full Time</td><td>4.0 LPA</td><td><span class="bdg bact">● Active</span></td><td><div class="acbts"><button class="acb" onclick="ei('job','Node.js Dev')">✏️</button><button class="acb" onclick="cd()">🗑️</button></div></td></tr>
+                    </tbody>
+                </table></div>
+            </div>
+        </div>
+
+        <!-- COURSES -->
+        <div class="ps" id="pg-courses">
+            <div class="tcard">
+                <div class="thead"><span class="ttitle">Courses</span><div class="tacts"><input class="tsrch" placeholder="🔍 Search..." oninput="ft('ct',this.value)"/><button class="abtn" onclick="om('course')">+ Add Course</button></div></div>
+                <div style="overflow-x:auto"><table id="ct">
+                    <thead><tr><th>Course</th><th>Duration</th><th>Mode</th><th>Fees</th><th>Enrolled</th><th>Status</th><th>Actions</th></tr></thead>
+                    <tbody>
+                    <tr><td><strong>Java Full Stack Developer</strong></td><td>6 Months</td><td>Offline</td><td>₹15,000</td><td>124</td><td><span class="bdg bact">● Active</span></td><td><div class="acbts"><button class="acb" onclick="ei('course','Java Full Stack')">✏️</button><button class="acb" onclick="cd()">🗑️</button></div></td></tr>
+                    <tr><td><strong>Software Testing</strong></td><td>4 Months</td><td>Offline</td><td>₹12,000</td><td>87</td><td><span class="bdg bact">● Active</span></td><td><div class="acbts"><button class="acb" onclick="ei('course','Software Testing')">✏️</button><button class="acb" onclick="cd()">🗑️</button></div></td></tr>
+                    <tr><td><strong>React + Node.js</strong></td><td>5 Months</td><td>Hybrid</td><td>₹14,000</td><td>43</td><td><span class="bdg bact">● Active</span></td><td><div class="acbts"><button class="acb" onclick="ei('course','React + Node')">✏️</button><button class="acb" onclick="cd()">🗑️</button></div></td></tr>
+                    <tr><td><strong>Data Science with Python</strong></td><td>5 Months</td><td>Offline</td><td>₹16,000</td><td>31</td><td><span class="bdg bina">○ Inactive</span></td><td><div class="acbts"><button class="acb" onclick="ei('course','Data Science')">✏️</button><button class="acb" onclick="cd()">🗑️</button></div></td></tr>
+                    </tbody>
+                </table></div>
+            </div>
+        </div>
+
+        <!-- CANDIDATES -->
+        <div class="ps" id="pg-candidates">
+            <div class="tcard">
+                <div class="thead"><span class="ttitle">Candidates</span><div class="tacts"><input class="tsrch" placeholder="🔍 Search..." oninput="ft('cant',this.value)"/><select class="tsel" onchange="fbs('cant',this.value,4)"><option value="">All</option><option>Active</option><option>Inactive</option></select></div></div>
+                <div style="overflow-x:auto"><table id="cant">
+                    <thead><tr><th>Candidate</th><th>Email</th><th>Phone</th><th>Qualification</th><th>Status</th><th>Actions</th></tr></thead>
+                    <tbody>
+                    <tr><td><div class="nw"><div class="av" style="background:#e94560">RS</div><strong>Rahul Sharma</strong></div></td><td class="tdg">rahul@gmail.com</td><td class="tdg">9876543210</td><td>B.E (CS)</td><td><span class="bdg bact">● Active</span></td><td><div class="acbts"><button class="acb" onclick="ei('candidate','Rahul Sharma')">✏️</button><button class="acb" onclick="cd()">🗑️</button></div></td></tr>
+                    <tr><td><div class="nw"><div class="av" style="background:#0f3460">PP</div><strong>Priya Patil</strong></div></td><td class="tdg">priya@gmail.com</td><td class="tdg">9765432108</td><td>MCA</td><td><span class="bdg bact">● Active</span></td><td><div class="acbts"><button class="acb" onclick="ei('candidate','Priya Patil')">✏️</button><button class="acb" onclick="cd()">🗑️</button></div></td></tr>
+                    <tr><td><div class="nw"><div class="av" style="background:#059669">AK</div><strong>Amit Kumar</strong></div></td><td class="tdg">amit@gmail.com</td><td class="tdg">9654321087</td><td>B.Tech (IT)</td><td><span class="bdg bact">● Active</span></td><td><div class="acbts"><button class="acb" onclick="ei('candidate','Amit Kumar')">✏️</button><button class="acb" onclick="cd()">🗑️</button></div></td></tr>
+                    <tr><td><div class="nw"><div class="av" style="background:#7c3aed">SD</div><strong>Sneha Desai</strong></div></td><td class="tdg">sneha@gmail.com</td><td class="tdg">9543210876</td><td>B.E (CS)</td><td><span class="bdg bina">○ Inactive</span></td><td><div class="acbts"><button class="acb" onclick="ei('candidate','Sneha Desai')">✏️</button><button class="acb" onclick="cd()">🗑️</button></div></td></tr>
+                    </tbody>
+                </table></div>
+            </div>
+        </div>
+
+        <!-- APPLICATIONS -->
+        <div class="ps" id="pg-applications">
+            <div class="tcard">
+                <div class="thead"><span class="ttitle">Job Applications</span><div class="tacts"><input class="tsrch" placeholder="🔍 Search..." oninput="ft('at',this.value)"/><select class="tsel" onchange="fbs('at',this.value,4)"><option value="">All Status</option><option>Applied</option><option>Shortlisted</option><option>Interview</option><option>Selected</option><option>Rejected</option></select></div></div>
+                <div style="overflow-x:auto"><table id="at">
+                    <thead><tr><th>Candidate</th><th>Job</th><th>Company</th><th>Applied On</th><th>Status</th><th>Actions</th></tr></thead>
+                    <tbody>
+                    <tr><td><div class="nw"><div class="av" style="background:#e94560">RS</div>Rahul Sharma</div></td><td>Java Full Stack Dev</td><td>TCS</td><td class="tdg">15 Jan 2024</td><td><select class="tsel" style="font-size:0.72rem;padding:2px 6px" onchange="us(this)"><option>Applied</option><option>Shortlisted</option><option selected>Interview</option><option>Selected</option><option>Rejected</option></select></td><td><button class="acb" onclick="cd()">🗑️</button></td></tr>
+                    <tr><td><div class="nw"><div class="av" style="background:#0f3460">PP</div>Priya Patil</div></td><td>QA Test Engineer</td><td>Infosys</td><td class="tdg">14 Jan 2024</td><td><select class="tsel" style="font-size:0.72rem;padding:2px 6px" onchange="us(this)"><option>Applied</option><option selected>Shortlisted</option><option>Interview</option><option>Selected</option><option>Rejected</option></select></td><td><button class="acb" onclick="cd()">🗑️</button></td></tr>
+                    <tr><td><div class="nw"><div class="av" style="background:#059669">AK</div>Amit Kumar</div></td><td>React Developer</td><td>Wipro</td><td class="tdg">13 Jan 2024</td><td><select class="tsel" style="font-size:0.72rem;padding:2px 6px" onchange="us(this)"><option selected>Applied</option><option>Shortlisted</option><option>Interview</option><option>Selected</option><option>Rejected</option></select></td><td><button class="acb" onclick="cd()">🗑️</button></td></tr>
+                    <tr><td><div class="nw"><div class="av" style="background:#7c3aed">SD</div>Sneha Desai</div></td><td>Android Developer</td><td>Zensar</td><td class="tdg">12 Jan 2024</td><td><select class="tsel" style="font-size:0.72rem;padding:2px 6px" onchange="us(this)"><option>Applied</option><option>Shortlisted</option><option>Interview</option><option selected>Selected</option><option>Rejected</option></select></td><td><button class="acb" onclick="cd()">🗑️</button></td></tr>
+                    </tbody>
+                </table></div>
+            </div>
+        </div>
+
+        <!-- ENROLLMENTS -->
+        <div class="ps" id="pg-enrollments">
+            <div class="tcard">
+                <div class="thead"><span class="ttitle">Course Enrollments</span><div class="tacts"><input class="tsrch" placeholder="🔍 Search..." oninput="ft('et',this.value)"/></div></div>
+                <div style="overflow-x:auto"><table id="et">
+                    <thead><tr><th>Candidate</th><th>Course</th><th>Enrolled On</th><th>Status</th><th>Payment</th><th>Actions</th></tr></thead>
+                    <tbody>
+                    <tr><td><div class="nw"><div class="av" style="background:#e94560">RS</div>Rahul Sharma</div></td><td>Java Full Stack Developer</td><td class="tdg">10 Jan 2024</td><td><span class="bdg benr">In Progress</span></td><td><span class="bdg bpaid">Paid</span></td><td><button class="acb" onclick="cd()">🗑️</button></td></tr>
+                    <tr><td><div class="nw"><div class="av" style="background:#0f3460">PP</div>Priya Patil</div></td><td>Software Testing</td><td class="tdg">08 Jan 2024</td><td><span class="bdg benr">In Progress</span></td><td><span class="bdg bpay">Pending</span></td><td><button class="acb" onclick="cd()">🗑️</button></td></tr>
+                    <tr><td><div class="nw"><div class="av" style="background:#059669">AK</div>Amit Kumar</div></td><td>React + Node.js</td><td class="tdg">05 Jan 2024</td><td><span class="bdg bcom">Completed</span></td><td><span class="bdg bpaid">Paid</span></td><td><button class="acb" onclick="cd()">🗑️</button></td></tr>
+                    </tbody>
+                </table></div>
+            </div>
+        </div>
+
+        <!-- COMPANIES -->
+        <div class="ps" id="pg-companies">
+            <div class="tcard">
+                <div class="thead"><span class="ttitle">Partner Companies</span><div class="tacts"><input class="tsrch" placeholder="🔍 Search..." oninput="ft('comt',this.value)"/><button class="abtn" onclick="om('company')">+ Add Company</button></div></div>
+                <div style="overflow-x:auto"><table id="comt">
+                    <thead><tr><th>Company</th><th>Industry</th><th>City</th><th>Jobs Posted</th><th>Status</th><th>Actions</th></tr></thead>
+                    <tbody>
+                    <tr><td><strong>Tata Consultancy Services</strong></td><td>IT</td><td>Pune</td><td>12</td><td><span class="bdg bact">● Active</span></td><td><div class="acbts"><button class="acb" onclick="ei('company','TCS')">✏️</button><button class="acb" onclick="cd()">🗑️</button></div></td></tr>
+                    <tr><td><strong>Infosys Limited</strong></td><td>IT</td><td>Bangalore</td><td>8</td><td><span class="bdg bact">● Active</span></td><td><div class="acbts"><button class="acb" onclick="ei('company','Infosys')">✏️</button><button class="acb" onclick="cd()">🗑️</button></div></td></tr>
+                    <tr><td><strong>Wipro Technologies</strong></td><td>IT</td><td>Hyderabad</td><td>6</td><td><span class="bdg bact">● Active</span></td><td><div class="acbts"><button class="acb" onclick="ei('company','Wipro')">✏️</button><button class="acb" onclick="cd()">🗑️</button></div></td></tr>
+                    <tr><td><strong>Capgemini India</strong></td><td>IT</td><td>Mumbai</td><td>5</td><td><span class="bdg bact">● Active</span></td><td><div class="acbts"><button class="acb" onclick="ei('company','Capgemini')">✏️</button><button class="acb" onclick="cd()">🗑️</button></div></td></tr>
+                    </tbody>
+                </table></div>
+            </div>
+        </div>
+
+        <!-- COLLEGES -->
+        <div class="ps" id="pg-colleges">
+            <div class="tcard">
+                <div class="thead"><span class="ttitle">Partner Colleges</span><div class="tacts"><input class="tsrch" placeholder="🔍 Search..." oninput="ft('colt',this.value)"/><button class="abtn" onclick="om('college')">+ Add College</button></div></div>
+                <div style="overflow-x:auto"><table id="colt">
+                    <thead><tr><th>College</th><th>City</th><th>Type</th><th>Contact Person</th><th>Status</th><th>Actions</th></tr></thead>
+                    <tbody>
+                    <tr><td><strong>MIT College of Engineering</strong></td><td>Pune</td><td>Engineering</td><td>Dr. Rajesh Kumar</td><td><span class="bdg bact">● Active</span></td><td><div class="acbts"><button class="acb" onclick="ei('college','MIT COE')">✏️</button><button class="acb" onclick="cd()">🗑️</button></div></td></tr>
+                    <tr><td><strong>Symbiosis Institute of Technology</strong></td><td>Pune</td><td>Engineering</td><td>Prof. Anita Joshi</td><td><span class="bdg bact">● Active</span></td><td><div class="acbts"><button class="acb" onclick="ei('college','SIT')">✏️</button><button class="acb" onclick="cd()">🗑️</button></div></td></tr>
+                    <tr><td><strong>COEP Technological University</strong></td><td>Pune</td><td>Engineering</td><td>Dr. Suresh Patil</td><td><span class="bdg bact">● Active</span></td><td><div class="acbts"><button class="acb" onclick="ei('college','COEP')">✏️</button><button class="acb" onclick="cd()">🗑️</button></div></td></tr>
+                    </tbody>
+                </table></div>
+            </div>
+        </div>
+
+        <!-- PLACEMENTS -->
+        <div class="ps" id="pg-placements">
+            <div class="tcard">
+                <div class="thead"><span class="ttitle">Placement Records</span><div class="tacts"><input class="tsrch" placeholder="🔍 Search..." oninput="ft('plt',this.value)"/><button class="abtn" onclick="om('placement')">+ Add Placement</button></div></div>
+                <div style="overflow-x:auto"><table id="plt">
+                    <thead><tr><th>Candidate</th><th>Company</th><th>Role</th><th>Package</th><th>Type</th><th>Status</th><th>Actions</th></tr></thead>
+                    <tbody>
+                    <tr><td><div class="nw"><div class="av" style="background:#e94560">RS</div>Rahul Sharma</div></td><td>TCS</td><td>Java Developer</td><td>4.5 LPA</td><td>Campus</td><td><span class="bdg bact">Placed</span></td><td><div class="acbts"><button class="acb" onclick="ei('placement','Rahul@TCS')">✏️</button><button class="acb" onclick="cd()">🗑️</button></div></td></tr>
+                    <tr><td><div class="nw"><div class="av" style="background:#059669">SD</div>Sneha Desai</div></td><td>Wipro</td><td>React Developer</td><td>5.0 LPA</td><td>Off Campus</td><td><span class="bdg bact">Placed</span></td><td><div class="acbts"><button class="acb" onclick="ei('placement','Sneha@Wipro')">✏️</button><button class="acb" onclick="cd()">🗑️</button></div></td></tr>
+                    </tbody>
+                </table></div>
+            </div>
+        </div>
+
+        <!-- TESTIMONIALS -->
+        <div class="ps" id="pg-testimonials">
+            <div class="tcard">
+                <div class="thead"><span class="ttitle">Testimonials</span><div class="tacts"><input class="tsrch" placeholder="🔍 Search..." oninput="ft('tt',this.value)"/><button class="abtn" onclick="om('testimonial')">+ Add Testimonial</button></div></div>
+                <div style="overflow-x:auto"><table id="tt">
+                    <thead><tr><th>Person</th><th>Company</th><th>Course</th><th>Rating</th><th>Featured</th><th>Status</th><th>Actions</th></tr></thead>
+                    <tbody>
+                    <tr><td><div class="nw"><div class="av" style="background:#e94560">RS</div>Rahul Sharma</div></td><td>TCS</td><td>Java Full Stack</td><td>⭐⭐⭐⭐⭐</td><td><span class="bdg bact">Yes</span></td><td><span class="bdg bact">● Active</span></td><td><div class="acbts"><button class="acb" onclick="ei('testimonial','Rahul')">✏️</button><button class="acb" onclick="cd()">🗑️</button></div></td></tr>
+                    <tr><td><div class="nw"><div class="av" style="background:#0f3460">PP</div>Priya Patil</div></td><td>Infosys</td><td>Software Testing</td><td>⭐⭐⭐⭐⭐</td><td><span class="bdg bina">No</span></td><td><span class="bdg bact">● Active</span></td><td><div class="acbts"><button class="acb" onclick="ei('testimonial','Priya')">✏️</button><button class="acb" onclick="cd()">🗑️</button></div></td></tr>
+                    </tbody>
+                </table></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- MODAL -->
+<div class="mo" id="mo" onclick="cmOuter(event)">
+    <div class="md">
+        <div class="mh"><h3 id="mTitle">Add</h3><button class="mc" onclick="cm()">✕</button></div>
+        <div class="mb" id="mBody"></div>
+        <div class="mf"><button class="bcl" onclick="cm()">Cancel</button><button class="bsv" onclick="sv()">Save →</button></div>
+    </div>
+</div>
+
+<!-- CONFIRM DELETE -->
+<div class="co" id="co">
+    <div class="cb">
+        <div class="cbi">🗑️</div>
+        <div class="cbt">Delete this record?</div>
+        <div class="cbd">This action cannot be undone.</div>
+        <div class="cbb">
+            <button class="ccl" onclick="document.getElementById('co').classList.remove('open')">Cancel</button>
+            <button class="cok" onclick="dd()">Delete</button>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+    'use strict';
+    var mf={
+      job:{t:'Add Job',h:'<div class="mr"><div class="mg"><label>Job Title</label><input type="text" placeholder="e.g. Java Full Stack Developer"/></div><div class="mg"><label>Company Name</label><input type="text" placeholder="e.g. TCS"/></div></div><div class="mr"><div class="mg"><label>Location</label><input type="text" placeholder="e.g. Pune"/></div><div class="mg"><label>Job Type</label><select><option>Full Time</option><option>Part Time</option><option>Internship</option><option>Remote</option></select></div></div><div class="mr"><div class="mg"><label>Experience</label><input type="text" placeholder="Fresher / 1-2 Years"/></div><div class="mg"><label>Salary</label><input type="text" placeholder="3.5 LPA"/></div></div><div class="mg"><label>Skills Required</label><input type="text" placeholder="Java, Spring Boot, MySQL"/></div><div class="mg"><label>Description</label><textarea placeholder="Job description..."></textarea></div><div class="mr"><div class="mg"><label>Qualification</label><input type="text" placeholder="B.E / B.Tech / MCA"/></div><div class="mg"><label>Last Date</label><input type="date"/></div></div>'},
+      course:{t:'Add Course',h:'<div class="mr"><div class="mg"><label>Course Title</label><input type="text" placeholder="Java Full Stack Developer"/></div><div class="mg"><label>Duration</label><input type="text" placeholder="6 Months"/></div></div><div class="mr"><div class="mg"><label>Mode</label><select><option>Offline</option><option>Online</option><option>Hybrid</option></select></div><div class="mg"><label>Fees</label><input type="text" placeholder="₹15,000"/></div></div><div class="mg"><label>Eligibility</label><input type="text" placeholder="Any Graduate / B.E / B.Tech"/></div><div class="mg"><label>Syllabus</label><textarea placeholder="Course topics..."></textarea></div><div class="mr"><div class="mg"><label>Certificate</label><select><option>Yes</option><option>No</option></select></div><div class="mg"><label>Job Assistance</label><select><option>Yes</option><option>No</option></select></div></div>'},
+      company:{t:'Add Company',h:'<div class="mr"><div class="mg"><label>Company Name</label><input type="text" placeholder="TCS"/></div><div class="mg"><label>Industry</label><input type="text" placeholder="IT, Finance"/></div></div><div class="mr"><div class="mg"><label>City</label><input type="text" placeholder="Pune"/></div><div class="mg"><label>State</label><input type="text" placeholder="Maharashtra"/></div></div><div class="mg"><label>Contact Person</label><input type="text" placeholder="HR Name"/></div><div class="mr"><div class="mg"><label>Contact Email</label><input type="email" placeholder="hr@company.com"/></div><div class="mg"><label>Contact Phone</label><input type="tel" placeholder="+91 98765 43210"/></div></div><div class="mr"><div class="mg"><label>Company Size</label><select><option>Startup</option><option>SME</option><option>Mid-size</option><option>Large</option><option>MNC</option></select></div><div class="mg"><label>Founded Year</label><input type="text" placeholder="1968"/></div></div>'},
+      college:{t:'Add College',h:'<div class="mr"><div class="mg"><label>College Name</label><input type="text" placeholder="MIT College of Engineering"/></div><div class="mg"><label>Type</label><select><option>Engineering</option><option>Management</option><option>Science & Arts</option><option>Polytechnic</option></select></div></div><div class="mr"><div class="mg"><label>City</label><input type="text" placeholder="Pune"/></div><div class="mg"><label>State</label><input type="text" placeholder="Maharashtra"/></div></div><div class="mg"><label>Affiliated To</label><input type="text" placeholder="Savitribai Phule Pune University"/></div><div class="mr"><div class="mg"><label>Contact Person (TPO)</label><input type="text" placeholder="Dr. Name"/></div><div class="mg"><label>Contact Email</label><input type="email" placeholder="tpo@college.edu"/></div></div>'},
+      testimonial:{t:'Add Testimonial',h:'<div class="mr"><div class="mg"><label>Person Name</label><input type="text" placeholder="Rahul Sharma"/></div><div class="mg"><label>Designation</label><input type="text" placeholder="Java Developer at TCS"/></div></div><div class="mr"><div class="mg"><label>Company</label><input type="text" placeholder="TCS"/></div><div class="mg"><label>Course</label><input type="text" placeholder="Java Full Stack"/></div></div><div class="mg"><label>Message</label><textarea placeholder="Testimonial message..."></textarea></div><div class="mr"><div class="mg"><label>Rating</label><select><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div><div class="mg"><label>Featured</label><select><option>Yes</option><option>No</option></select></div></div>'},
+      placement:{t:'Add Placement',h:'<div class="mr"><div class="mg"><label>Candidate Name</label><input type="text" placeholder="Full name"/></div><div class="mg"><label>Company</label><input type="text" placeholder="TCS"/></div></div><div class="mr"><div class="mg"><label>Role</label><input type="text" placeholder="Java Developer"/></div><div class="mg"><label>Package</label><input type="text" placeholder="4.5 LPA"/></div></div><div class="mr"><div class="mg"><label>Placement Type</label><select><option>Campus</option><option>Off Campus</option><option>Referral</option></select></div><div class="mg"><label>Joining Date</label><input type="date"/></div></div><div class="mg"><label>Location</label><input type="text" placeholder="Pune"/></div>'}
+    };
+
+    var ptitles={dashboard:'Dashboard',jobs:'Job Listings',courses:'Courses',candidates:'Candidates',applications:'Applications',enrollments:'Enrollments',companies:'Companies',colleges:'Colleges',placements:'Placements',testimonials:'Testimonials'};
+
+    function sp(name,btn){
+      document.querySelectorAll('.ps').forEach(function(e){e.classList.remove('active');});
+      document.getElementById('pg-'+name).classList.add('active');
+      document.querySelectorAll('.ni').forEach(function(e){e.classList.remove('active');});
+      if(btn) btn.classList.add('active');
+      document.getElementById('pt').textContent = ptitles[name]||name;
+      if(window.innerWidth<=900) document.getElementById('sidebar').classList.remove('open');
+    }
+    function om(type,title){var c=mf[type]||{t:'Add',h:''};document.getElementById('mTitle').textContent=title||c.t;document.getElementById('mBody').innerHTML=c.h;document.getElementById('mo').classList.add('open');document.body.style.overflow='hidden';}
+    function cm(){document.getElementById('mo').classList.remove('open');document.body.style.overflow='';}
+    function cmOuter(e){if(e.target===document.getElementById('mo'))cm();}
+    function ei(type,name){om(type,'Edit '+name);showToast('Editing: '+name,'info');}
+    function sv(){cm();showToast('Saved successfully! ✓','success');}
+    function ft(tid,q){var rows=document.querySelectorAll('#'+tid+' tbody tr');rows.forEach(function(r){r.style.display=r.textContent.toLowerCase().includes(q.toLowerCase())?'':'none';});}
+    function fbs(tid,s,ci){var rows=document.querySelectorAll('#'+tid+' tbody tr');rows.forEach(function(r){var c=r.cells[ci];r.style.display=(!s||(c&&c.textContent.includes(s)))?'':'none';});}
+    function us(sel){showToast('Status updated to '+sel.value+' ✓','success');}
+    function cd(){document.getElementById('co').classList.add('open');}
+    function dd(){document.getElementById('co').classList.remove('open');showToast('Record deleted ✓','success');}
+    function logout(){['vm_token','vm_role','vm_email','vm_name'].forEach(function(k){localStorage.removeItem(k);});window.location.href='../login.html';}
+    function showToast(msg,type){var t=document.getElementById('toast');t.textContent=msg;t.className='toast show '+(type||'info');clearTimeout(t._t);t._t=setTimeout(function(){t.className='toast';},3000);}
+
+    window.addEventListener('DOMContentLoaded',function(){
+      var email=localStorage.getItem('vm_email')||'admin@demo.com';
+      var name=email.split('@')[0].split('.').map(function(p){return p.charAt(0).toUpperCase()+p.slice(1);}).join(' ');
+      var initials=name.split(' ').map(function(p){return p[0];}).join('').slice(0,2).toUpperCase();
+      ['sba','tav'].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=initials;});
+      var sbn=document.getElementById('sbn');if(sbn)sbn.textContent=name;
+      buildBar();
+      loadStats();
+    });
+
+    function buildBar(){
+      var data=[12,8,18,14,22,9,15],max=Math.max.apply(null,data);
+      var cols=['#e94560','#0f3460','#f5a623','#059669','#7c3aed','#2563eb','#e94560'];
+      var el=document.getElementById('barC');
+      if(!el) return;
+      el.innerHTML=data.map(function(v,i){
+        var h=Math.round((v/max)*120);
+        return '<div class="bcol"><div class="bf" style="height:'+h+'px;background:'+cols[i]+'" data-v="'+v+' apps"></div></div>';
+      }).join('');
+    }
+
+    function loadStats(){
+      fetch('/api/admin/dashboard',{headers:{'Authorization':'Bearer '+localStorage.getItem('vm_token')}})
+      .then(function(r){return r.json();})
+      .then(function(d){
+        if(d.success&&d.data){
+          var s=d.data;
+          if(s.totalCandidates!==undefined)document.getElementById('sCand').textContent=s.totalCandidates;
+          if(s.activeJobs!==undefined)document.getElementById('sJobs').textContent=s.activeJobs;
+          if(s.totalApplications!==undefined)document.getElementById('sApps').textContent=s.totalApplications;
+          if(s.totalPlaced!==undefined)document.getElementById('sPlaced').textContent=s.totalPlaced;
+        }
+      }).catch(function(){});
+    }
+
+    (function(){
+      var t=localStorage.getItem('vm_token');
+      var r=localStorage.getItem('vm_role');
+      if(!t){window.location.href='../login.html';return;}
+      if(r!=='admin'&&r!=='ROLE_ADMIN'){window.location.href='../candidate/dashboard.html';}
+    }());
+</script>
 </body>
 </html>
